@@ -1,0 +1,24 @@
+body { 
+    padding: 10px;
+}
+.navbar {
+    font-weight: bold;
+}
+.mr-auto { 
+    margin-right: auto;
+}
+footer {
+    position: fixed;
+    Width: 100%;
+    bottom: 0;
+}
+.list-section {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }

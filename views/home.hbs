@@ -1,0 +1,57 @@
+
+{{#if alertMessage}}
+<div class="alert alert-danger" role="alert">
+  {{alertMessage}}
+</div>
+{{/if}}
+  <div class="row d-flex justify-content-start">
+    <aside class="col-2">
+              <div class="d-flex" id="wrapper">
+                <!-- Sidebar-->
+                <div class="border-end bg-white" id="sidebar-wrapper">
+                    <div class="list-group list-group-flush">
+                      <form action="/" method="post" role="form" enctype="application/x-www-form-urlencoded">
+                        <button name="choice" class="list-group-item list-group-item-action list-group-item-light p-3" value="add">Add a Car Part</button>
+                        <button name="choice" class="list-group-item list-group-item-action list-group-item-light p-3" value="show">Find a Car Part</button>
+                        <button name="choice" class="list-group-item list-group-item-action list-group-item-light p-3" value="list">Show all Car Parts</button>
+                        <button name="choice" class="list-group-item list-group-item-action list-group-item-light p-3" value="edit">Update a Car Part</button>
+                        <button name="choice" class="list-group-item list-group-item-action list-group-item-light p-3" value="delete">Delete a Car Part</button>
+                      </form>
+                    </div>
+                </div>
+    </aside>
+    <div class="col-4">
+      {{#if showForm}}
+        <form action="{{endpoint}}" method="{{method}}" onsubmit="{{submitfn}}" 
+        role ="form" enctype="application/x-www-form-urlencoded">
+          <legend>{{legend}}</legend>
+          <input type="hidden" name="_method" value="{{methodOverride}}" required>
+          {{#each formfields}}
+            <label for="{{field}}">{{pretty}}</label><br>
+            <input type={{type}} id="{{field}}" name="{{field}}" required>
+            <br>
+          {{/each}}
+          <button id="submitAction" type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      {{/if}}
+      {{#unless showForm}}
+        <div class="list-section">
+          <table>
+            <tr>
+              <th>Part #</th>
+              <th>Name</th>
+            </tr>
+            {{#each part}}
+            <tr>
+              <td>{{partNumber}}</td>
+              <td>{{name}}</td>
+            </tr>
+            {{/each}}    
+          </table>
+        </div>
+      {{/unless}}
+      </div>
+  </div>
+{{#if message}}
+<h3 id="action-message">{{message}} {{#if part}} Part #{{partNumber}} Name:{{name}} {{/if}}</h3>
+{{/if}}

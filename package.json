@@ -1,0 +1,36 @@
+{
+  "name": "web2assignment1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "express": "^4.17.3",
+    "express-handlebars": "^6.0.4",
+    "jest": "^27.5.1",
+    "jquery": "^3.6.0",
+    "method-override": "^3.0.0",
+    "mysql2": "^2.3.3",
+    "pino": "^7.9.2",
+    "pino-caller": "^3.2.0",
+    "pino-http": "^6.6.0",
+    "supertest": "^6.2.2",
+    "validator": "^13.7.0"
+  },
+  "scripts": {
+    "test": "jest --verbose --detectOpenHandles ./tests",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JosephAmbayec/Web2Assignment1.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JosephAmbayec/Web2Assignment1/issues"
+  },
+  "homepage": "https://github.com/JosephAmbayec/Web2Assignment1#readme"
+}
