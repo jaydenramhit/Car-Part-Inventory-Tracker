@@ -1,5 +1,8 @@
 const mysql = require('mysql2/promise');
 const validUtils = require('../validateUtils.js');
+const logger = require('../logger');
+
+
 var connection;
 // docker run -p 10000:3306 --name carPartSqlDb -e MYSQL_ROOT_PASSWORD=pass -e MYSQL_DATABASE=carPart_db -d mysql:5.7
 /**
@@ -8,49 +11,77 @@ var connection;
  * @param {boolean} test 
  */
 async function initialize(dbname, reset){
-    connection = await mysql.createConnection({
-        host: 'localhost',
-        user: 'root',
-        port: '10000',
-        password: 'pass',
-        database: dbname
-    })
-
-
-    if (reset) {
-        const dropQuery = "DROP TABLE IF EXISTS carPart";
-        await connection.execute(dropQuery).then(console.log("Car table dropped"))
-            .catch((error) => { console.error(error) });
+    try {
+        connection = await mysql.createConnection({
+            host: 'localhost',
+            user: 'root',
+            port: '10000',
+            password: 'pass',
+            database: dbname
+        })
+    
+        if (reset)
+            resetTable();
+    
+        const createTableStatement = `CREATE TABLE IF NOT EXISTS carPart(partNumber int, name VARCHAR(100), PRIMARY KEY (partNumber))`
+        await connection.execute(createTableStatement)
+        logger.info("Car part table created/exists");
+        return connection
     }
-
-    const createTableStatement = `CREATE TABLE IF NOT EXISTS carPart(partNumber int, name VARCHAR(100), PRIMARY KEY (partNumber))`
-    await connection.execute(createTableStatement).then(console.log("Car part table created/exists")).catch((error) => { console.error(error) });
-    return connection
+    catch (error){
+        logger.error(error.message);
+        throw new DatabaseConnectionError();
+    }
+  
 }
 
 async function getConnection(){
     return connection;
+}
+async function resetTable(){
+    const dropQuery = "DROP TABLE IF EXISTS carPart";
+       await connection.execute(dropQuery).then(logger.info("Car part table dropped"))
+           .catch((error) => { logger.error(error) });
 }
 /**
  * Adds carPart to table.
  * @param {string}} model 
 
  */
-async function addCarPart(partNumber, name){
-    if (validUtils.isValid(name))
-    {
-        const addStatement = `INSERT INTO carPart(partNumber, name) values ('${partNumber}', '${name}');`;
-        await connection.execute(addStatement).then(console.log("Successful add.")).catch((error) => { console.error(error) });
-        return { "partNumber": partNumber, "name": name };
+async function addCarPart(partNumber, name){ 
+    if (!validUtils.isValid(name) || !validUtils.isPartNumber(partNumber)) {
+        throw new InvalidInputError();
     }
+    try {
+        const addStatement = `INSERT INTO carPart(partNumber, name) values ('${partNumber}', '${name}');`;
+        await connection.execute(addStatement)
+        logger.info("Successful add.");
+        return { "partNumber": partNumber, "name": name };           
+    }
+    catch(error){
+        logger.error(error);
+        throw new DatabaseConnectionError();
+    }
+
 
 }
 /**
- * Returns an array of carParts that match the given model. Check findCar method.
- * @param {string} model 
+ * Returns an array of carParts that match the given model. Check findCarPart method.
+ * @param {string} partNumber 
  */
 async function findCarPartByNumber(partNumber){
-    return findCarPart("partNumber", partNumber);
+    if (!validUtils.isPartNumber(partNumber))
+        throw new InvalidInputError();
+    try {
+        const queryStatement = `SELECT * FROM carPart WHERE partNumber= '${partNumber}';`;
+        let carPartArray = await connection.query(queryStatement)
+        logger.info("Successful search.");
+        return carPartArray[0];
+    }
+    catch(error){
+        logger.error(error);
+        throw new DatabaseConnectionError();
+    }
 }
 
 /**
@@ -59,29 +90,34 @@ async function findCarPartByNumber(partNumber){
  * @returns 
  */
 async function verifyCarPartExists(partNumber){
-    if ((await findCarPart("partNumber", partNumber)).length != 0){
-        return true;
+    if (!validUtils.isPartNumber(partNumber))
+        throw new InvalidInputError();
+    try {
+        if ((await findCarPartByNumber(partNumber)).length != 0){
+            return true;
+        }
+    }
+    catch(error){
+        logger.error(error);
+        throw new DatabaseConnectionError();
     }
     return false;
 }
-
 /**
- * findCar is a private method used to retrieve carPart from specified table, finding specified parameter given its value.
- * @param {string} table 
- * @param {string} property 
- * @param {value} value
+ * Returns all parts that exist in the database;
+ * @returns Array of car parts
  */
-// Using this method, you can implement other methods that select by the other properties (year and price). For now model and brand is good.
-async function findCarPart(property, value){
-    const queryStatement = `SELECT * FROM carPart WHERE ${property} = '${value}';`;
-    let carPartArray = await connection.query(queryStatement).then(console.log("Successful search.")).catch((error) => { console.error(error) });
-    return carPartArray[0];
-}
-
 async function findAllCarParts(){
-    const queryStatement = "SELECT * FROM carPart;";
-    let carPartArray = await connection.query(queryStatement).then(console.log("Successful search.")).catch((error) => { console.error(error) });
-    return carPartArray[0];
+    try {
+        const queryStatement = "SELECT * FROM carPart;";
+        let carPartArray = await connection.query(queryStatement)
+        logger.info("Successful search.");
+        return carPartArray[0];
+    }
+    catch(error){
+        logger.error(error);
+        throw new DatabaseConnectionError();
+    }
 }
 
 /**
@@ -90,9 +126,18 @@ async function findAllCarParts(){
  * @param {double} name 
  */
 async function updateCarPartName(partNumber, name){
-    const addStatement = `UPDATE carPart SET name = '${name}' WHERE partNumber = ${partNumber};`;
-    await connection.query(addStatement).then(console.log("Successful update.")).catch((error) => { console.error(error.message) });
-    return { "partNumber": partNumber, "name": name };
+    if (!validUtils.isValid(name) || !validUtils.isPartNumber(partNumber))
+        throw new InvalidInputError();
+    try {
+        const addStatement = `UPDATE carPart SET name = '${name}' WHERE partNumber = ${partNumber};`;
+        await connection.query(addStatement)
+        logger.info("Successful update.");
+        return { "partNumber": partNumber, "name": name };
+    }
+    catch(error){
+        logger.error(error);
+        throw new DatabaseConnectionError();
+    }
 }
 
 /**
@@ -100,9 +145,19 @@ async function updateCarPartName(partNumber, name){
  * @param {int} partNumber  
  */
  async function deleteCarPart(partNumber){
-    const addStatement = `DELETE FROM carPart where partNumber = ${partNumber};`;
-    await connection.execute(addStatement).then(console.log("Successful delete.")).catch((error) => { console.error(error) });
-    return {"partNumber": partNumber }
+    if (!validUtils.isPartNumber(partNumber))
+        throw new InvalidInputError();
+    try {
+        const addStatement = `DELETE FROM carPart where partNumber = ${partNumber};`;
+        await connection.execute(addStatement)
+        logger.info("Successful delete.");
+        return {"partNumber": partNumber }
+    }
+    catch(error){
+        logger.error(error);
+        throw new DatabaseConnectionError();
+    }
+
 }
 
 function checkConnection(res){
@@ -114,6 +169,7 @@ function checkConnection(res){
 }
 
 class DatabaseConnectionError extends Error {}
+class InvalidInputError extends Error {} 
 
 module.exports = {
     initialize,
@@ -125,5 +181,6 @@ module.exports = {
     findAllCarParts,
     verifyCarPartExists,
     checkConnection,
-    DatabaseConnectionError
+    DatabaseConnectionError,
+    InvalidInputError
 }
