@@ -10,18 +10,25 @@
     "express": "^4.17.3",
     "express-handlebars": "^6.0.4",
     "jest": "^27.5.1",
+    "jest-puppeteer": "^6.1.0",
     "jquery": "^3.6.0",
     "method-override": "^3.0.0",
     "mysql2": "^2.3.3",
-    "pino": "^7.9.2",
+    "pino": "^7.10.0",
     "pino-caller": "^3.2.0",
     "pino-http": "^6.6.0",
+    "pino-pretty": "^7.6.1",
+    "puppeteer": "^13.5.2",
     "supertest": "^6.2.2",
     "validator": "^13.7.0"
   },
   "scripts": {
     "test": "jest --verbose --detectOpenHandles ./tests",
     "start": "node server.js"
+  },
+  "jest": {
+    "testTimeout": 15000,
+    "preset": "jest-puppeteer"
   },
   "repository": {
     "type": "git",
@@ -32,5 +39,8 @@
   "bugs": {
     "url": "https://github.com/JosephAmbayec/Web2Assignment1/issues"
   },
-  "homepage": "https://github.com/JosephAmbayec/Web2Assignment1#readme"
+  "homepage": "https://github.com/JosephAmbayec/Web2Assignment1#readme",
+  "devDependencies": {
+    "jsdoc": "^3.6.10"
+  }
 }
