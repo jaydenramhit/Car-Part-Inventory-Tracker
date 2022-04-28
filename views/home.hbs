@@ -11,16 +11,16 @@
                 <div class="border-end bg-white" id="sidebar-wrapper">
                     <div class="list-group list-group-flush">
                       <form action="/" method="post" role="form" enctype="application/x-www-form-urlencoded">
-                        <button name="choice" class="list-group-item list-group-item-action list-group-item-light p-3" value="add">Add a Car Part</button>
-                        <button name="choice" class="list-group-item list-group-item-action list-group-item-light p-3" value="show">Find a Car Part</button>
-                        <button name="choice" class="list-group-item list-group-item-action list-group-item-light p-3" value="list">Show all Car Parts</button>
-                        <button name="choice" class="list-group-item list-group-item-action list-group-item-light p-3" value="edit">Update a Car Part</button>
-                        <button name="choice" class="list-group-item list-group-item-action list-group-item-light p-3" value="delete">Delete a Car Part</button>
+                        <button id="add" name="choice" class="list-group-item list-group-item-action list-group-item-light p-3" value="add">Add a Car Part</button>
+                        <button id="show" name="choice" class="list-group-item list-group-item-action list-group-item-light p-3" value="show">Find a Car Part</button>
+                        <button id="list" name="choice" class="list-group-item list-group-item-action list-group-item-light p-3" value="list">Show all Car Parts</button>
+                        <button id="update" name="choice" class="list-group-item list-group-item-action list-group-item-light p-3" value="edit">Update a Car Part</button>
+                        <button id="delete" name="choice" class="list-group-item list-group-item-action list-group-item-light p-3" value="delete">Delete a Car Part</button>
                       </form>
                     </div>
                 </div>
     </aside>
-    <div class="col-4">
+    <div class="col-8">
       {{#if showForm}}
         <form action="{{endpoint}}" method="{{method}}" onsubmit="{{submitfn}}" 
         role ="form" enctype="application/x-www-form-urlencoded">
@@ -28,13 +28,13 @@
           <input type="hidden" name="_method" value="{{methodOverride}}" required>
           {{#each formfields}}
             <label for="{{field}}">{{pretty}}</label><br>
-            <input type={{type}} id="{{field}}" name="{{field}}" required>
+            <input type="{{type}}" id="{{field}}" name="{{field}}" required>
             <br>
           {{/each}}
           <button id="submitAction" type="submit" class="btn btn-primary">Submit</button>
         </form>
       {{/if}}
-      {{#unless showForm}}
+      {{#if showList}}
         <div class="list-section">
           <table>
             <tr>
@@ -49,7 +49,7 @@
             {{/each}}    
           </table>
         </div>
-      {{/unless}}
+      {{/if}}
       </div>
   </div>
 {{#if message}}

@@ -1,44 +1,11 @@
-Endpoints to try:
-/ - home message
-/* - error message given the entered endpoint is not one of the following
-/cars - (GET) Lists all cars in the database
-/cars/brand - (GET) Lists all cars that belong to the same brand (see below for viable brands)
-/cars - (POST) Add car to database given the data in the request body (see below for viable post request bodies)
-/cars/id - (PUT) Update a car given it's id and the price data in the request body (see below for viable put request bodies)
-/cars/id - (DELETE) Delete a car given it's id
+Do the following to run the website:
+- npm install
+- docker run -p 10000:3306 --name carPartSqlDb -e MYSQL_ROOT_PASSWORD=pass -e MYSQL_DATABASE=carPart_db -d mysql:5.7
+- also create a database called car_testDb
 
-VIABLE POST REQUEST BODIES:
-{
-    "model" : "Camry",
-    "brand" : "Toyota",
-    "modelYear" : 2011,
-    "price" : 4000.50
-}
+home url: http://localhost:1339/
 
-{ 
-    "model": "Focus", 
-    "brand": "Ford", 
-    "modelYear": 2022, 
-    "price": 25500.99 
-}
+To use the website, simply click the buttons on the side to perform the desired actions.
 
-{ 
-    "model": "BRZ", 
-    "brand": "Subaru", 
-    "modelYear": 2008, 
-    "price": 10500.99 
-}
+Check the documentation in documentation/index.html for more information.
 
-{ 
-    "model": "A4", 
-    "brand": "Audi", 
-    "modelYear": 2022, 
-    "price": 44500.99 
-}
-
-VIABLE PUT REQUEST BODIES:
-{ price: 5000 }
-{ price: 0.01 }
-
-VIABLE BRAND NAMES:
-[ "Abarth", "Alfa Romeo", "Aston Martin", "Audi", "Bentley", "BMW", "Bugatti", "Cadillac", "Chevrolet", "Chrysler", "Citroën", "Dacia", "Daewoo", "Daihatsu", "Dodge", "Donkervoort", "DS", "Ferrari", "Fiat", "Fisker", "Ford", "Honda", "Hummer", "Hyundai", "Infiniti", "Iveco", "Jaguar", "Jeep", "Kia", "KTM", "Lada", "Lamborghini", "Lancia", "Land Rover", "Landwind", "Lexus", "Lotus", "Maserati", "Maybach", "Mazda", "McLaren", "Mercedes-Benz", "MG", "Mini", "Mitsubishi", "Morgan", "Nissan", "Opel", "Peugeot", "Porsche", "Renault", "Rolls-Royce", "Rover", "Saab", "Seat", "Skoda", "Smart", "SsangYong", "Subaru", "Suzuki", "Tesla", "Toyota", "Volkswagen", "Volvo" ];

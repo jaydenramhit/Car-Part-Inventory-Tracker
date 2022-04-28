@@ -2,7 +2,7 @@ const app = require("../app");
 const supertest = require("supertest");
 const testRequest = supertest(app); 
 const dbName = "car_testDb";
-const model = require("../models/carModelMysql.js");
+const model = require("../models/carPartModelMysql.js");
 
 var connection;
 beforeEach(async () => { connection = await model.initialize(dbName, true);});
@@ -13,27 +13,17 @@ afterEach(async () => {
 
 /* Data to be used to generate random car for testing */
 const carData = [
-    { model: 'Camry', brand: 'Toyota', modelYear: 2013, price: 4500.50 },
-    { model: 'Impreza', brand: 'Subaru', modelYear: 2011, price: 3899.99 },
-    { model: 'Corolla', brand: 'Toyota', modelYear: 2007, price: 1500 },
-    { model: 'Civic', brand: 'Honda', modelYear: 2009, price: 2300 },
-    { model: 'Malibu', brand: 'Chevrolet', modelYear: 2021, price: 22500.50 },
-    { model: 'Focus', brand: 'Ford', modelYear: 2022, price: 25500.99 }
+    { partNumber: 1, name: 'Muffler'},
+    { partNumber: 2, name: 'Windshield'},
+    { partNumber: 3, name: 'Mirror'},
+    { partNumber: 4, name: 'Spoiler'},
+    { partNumber: 5, name: 'Hubcap'},
+    { partNumber: 6, name: 'Tires'}
 ]
     
- /** Splice version: Ensures a car can only be added to the DB once. */
-// const generateCarData = () => carData.splice(Math.floor((Math.random() * carData.length)), 1)[0];
-    
-// Slice version - Allows many tests without ever "running out" of generated pokemon
-const generateCarData = () => {
-    const index = Math.floor((Math.random() * carData.length));
-    return carData.slice(index, index+1)[0];
-}
-
 test("GET / success case", async () => {
     let testResponse = await testRequest.get('/');
     expect(testResponse.status).toBe(200);
-    expect(testResponse.text).toBe('Welcome to my page! - Joseph Ambayec');
 }) 
 
 test("GET random endpoint error case", async () => {
@@ -41,142 +31,157 @@ test("GET random endpoint error case", async () => {
     expect(testResponse.status).toBe(404);
 })
 
-test("POST /cars success case", async () =>{
-    let randomCar = generateCarData();
-    let testResponse = await testRequest.post('/cars').send(randomCar);
+test("POST /parts success case", async () =>{
+    let randomPart = carData.at(Math.random() * 6);
+    let testResponse = await testRequest.post('/parts').send(randomPart);
     expect(testResponse.status).toBe(201);
 
-    let result = await connection.execute("select brand, model, modelYear, price from car;")
+    let result = await connection.execute("select partNumber, name from carPart;")
     expect(result[0].length).toBe(1);
-    expect(result[0][0]).toEqual(randomCar);
+    expect(result[0][0]).toEqual(randomPart);
 })
 
-test("POST /cars fail case", async () =>{
-    let testCar = generateCarData();
-    let oldModel = testCar.model;
-    testCar.model = "3*(&784723749as";
-    let testResponse = await testRequest.post('/cars').send(testCar);
+test("POST /parts fail case", async () =>{
+    let testCarPart = carData.at(Math.random() * 6);
+    let oldName = testCarPart.name;
+    testCarPart.name = "3*(&784723749as";
+    let testResponse = await testRequest.post('/parts').send(testCarPart);
     expect(testResponse.status).toBe(404);
     
-    let result = await connection.execute("select brand, model, modelYear, price from car;")
+    let result = await connection.execute("select partNumber, name from carPart;")
     expect(result[0].length).toBe(0);
 
     // Reset model
-    testCar.model = oldModel;
+    testCarPart.name = oldName;
 })
 
-test("GET /cars specific success case", async () => {
-    let randomCar = generateCarData();
-    let specificCar = { brand: "Abarth", model: "Ultra", modelYear: 2020, price: 69000 }
-    model.addCar(randomCar.model, randomCar.brand, randomCar.modelYear, randomCar.price);
-    model.addCar(specificCar.model, specificCar.brand, specificCar.modelYear, specificCar.price);
+test("GET /parts specific success case", async () => {
+    let randomPart = carData.at(Math.random() * 6);
+    let specificPart = { partNumber: 30000001, name: "Specific" }
+    await model.addCarPart(randomPart.partNumber, randomPart.name);
+    await model.addCarPart(specificPart.partNumber, specificPart.name);
 
-    let result = await connection.execute("select brand, model, modelYear, price from car;")
+    let result = await connection.execute("select partNumber, name from carPart;")
     expect(result[0].length).toBe(2);
     
 
-    let testResponse = await testRequest.get("/cars/Abarth");
+    let testResponse = await testRequest.get(`/parts/${specificPart.partNumber}`);
     expect(testResponse.status).toBe(200)
 })
 
-test("GET /cars specific fail case", async () => {
-    let randomCar = generateCarData();
-    await model.addCar(randomCar.model, randomCar.brand, randomCar.modelYear, randomCar.price);
+test("GET /parts specific fail case invalid input", async () => {
+    let randomPart = carData.at(Math.random() * 6);
+    await model.addCarPart(randomPart.partNumber, randomPart.name);
 
-    let result = await connection.execute("select brand, model, modelYear, price from car;")
+    let result = await connection.execute("select partNumber, name from carPart;")
     expect(result[0].length).toBe(1);
     
-    let testResponse = await testRequest.get("/cars/TestBrand");
+    let testResponse = await testRequest.get("/parts/NotANumber");
     expect(testResponse.status).toBe(404)
-    expect(testResponse.text).toBe('No results');
+    expect(testResponse.text).toContain("Invalid input")
 })
 
-test("GET /cars collection success case", async () => {
-    let randomCar1 = generateCarData();
-    let randomCar2 = generateCarData();
-    let randomCar3 = generateCarData();
+test("GET /parts specific fail case no parts", async () => {
+    let result = await connection.execute("select partNumber, name from carPart;")
+    expect(result[0].length).toBe(0);
+    
+    let testResponse = await testRequest.get("/parts/2002");
+    expect(testResponse.status).toBe(404)
+    expect(testResponse.text).toContain("Could not find any parts with part number");
+})
 
-    let carArray = [
-    await model.addCar(randomCar1.model, randomCar1.brand, randomCar1.modelYear, randomCar1.price),
-    await model.addCar(randomCar2.model, randomCar2.brand, randomCar2.modelYear, randomCar2.price),
-    await model.addCar(randomCar3.model, randomCar3.brand, randomCar3.modelYear, randomCar3.price)]
+test("GET /parts collection success case", async () => {
+    let randomCar1 = carData.at(0);
+    let randomCar2 = carData.at(1);
+    let randomCar3 = carData.at(2);
 
-    let result = await connection.execute("select id, brand, model, modelYear, price from car;");
+    await model.addCarPart(randomCar1.partNumber, randomCar1.name)
+    await model.addCarPart(randomCar2.partNumber, randomCar2.name)
+    await model.addCarPart(randomCar3.partNumber, randomCar3.name)
+
+    let result = await connection.execute("select partNumber, name  from carPart;");
     expect(result[0].length).toBe(3);
 
-    let testResponse = await testRequest.get("/cars");
+    let testResponse = await testRequest.get("/parts");
     expect(testResponse.status).toBe(200);
-    expect(testResponse.body).toEqual(result[0]);
+    expect(testResponse.text).toContain(`${randomCar1.partNumber}`);
+    expect(testResponse.text).toContain(`${randomCar1.name}`);
+    expect(testResponse.text).toContain(`${randomCar2.partNumber}`);
+    expect(testResponse.text).toContain(`${randomCar2.name}`);
+    expect(testResponse.text).toContain(`${randomCar3.partNumber}`);
+    expect(testResponse.text).toContain(`${randomCar3.name}`);
 })
 
-test("GET /cars collection fail case", async () => {
-    let result = await connection.execute("select id, brand, model, modelYear, price from car;");
+test("GET /parts collection fail case", async () => {
+    let result = await connection.execute("select partNumber, name from carPart;");
     expect(result[0].length).toBe(0);
 
-    let testResponse = await testRequest.get("/cars");
+    let testResponse = await testRequest.get("/parts");
     expect(testResponse.status).toBe(404);
 })
 
-test("PUT /cars/id success case", async () => {
-    let randomCar = generateCarData();
-    await model.addCar(randomCar.model, randomCar.brand, randomCar.modelYear, randomCar.price);
+test("PUT /parts/id success case", async () => {
+    let randomPart = carData.at(Math.random() * 6);
+    await model.addCarPart(randomPart.partNumber, randomPart.name);
 
-    let before = await connection.execute("select brand, model, modelYear, price from car;");
+    let before = await connection.execute("select partNumber, name from carPart;");
     expect(before[0].length).toBe(1);
 
-    let testResponse = await testRequest.put('/cars/1').send({ price: 0.01 } );
+    let testResponse = await testRequest.put(`/parts/${randomPart.partNumber}`).send({ name: "NewName" } );
     expect(testResponse.status).toBe(200);
 
-    let after = await connection.execute("select brand, model, modelYear, price from car;");
+    let after = await connection.execute("select partNumber, name from carPart;");
     expect(after[0].length).toBe(1);
-    expect(after[0][0].price).toBe(0.01);
+    expect(after[0][0].name).toBe("NewName");
 })
 
-test("PUT /cars/id fail case", async () => {
-    let randomCar = generateCarData();
-    await model.addCar(randomCar.model, randomCar.brand, randomCar.modelYear, randomCar.price);
+test("PUT /parts/id fail case", async () => {
+    let randomPart = carData.at(Math.random() * 6);
+    await model.addCarPart(randomPart.partNumber, randomPart.name);
 
-    let before = await connection.execute("select brand, model, modelYear, price from car;");
+    let before = await connection.execute("select partNumber, name from carPart;");
     expect(before[0].length).toBe(1);
 
-    let testResponse = await testRequest.put('/cars/999').send({ price: 0.01 } );
+    let testResponse = await testRequest.put(`/parts/9999999`).send({ name: "NewName" } );
     expect(testResponse.status).toBe(404);
+    expect(testResponse.text).toContain("Could not find part")
 
-    let after = await connection.execute("select brand, model, modelYear, price from car;");
+    let after = await connection.execute("select partNumber, name from carPart;");
     expect(after[0].length).toBe(1);
-    expect(after[0][0].price).toBe(randomCar.price);
+    expect(after[0][0].name).toBe(randomPart.name);
 })
 
-test("DELETE /cars/id success case", async () =>{
-    let randomCar1 = generateCarData();
-    let randomCar2 = generateCarData();
+test("DELETE /parts/id success case", async () =>{
+    let randomCar1 = carData.at(3);
+    let randomCar2 =  carData.at(5);
 
-    await model.addCar(randomCar1.model, randomCar1.brand, randomCar1.modelYear, randomCar1.price);
-    await model.addCar(randomCar2.model, randomCar2.brand, randomCar2.modelYear, randomCar2.price);
+    await model.addCarPart(randomCar1.partNumber, randomCar1.name);
+    await model.addCarPart(randomCar2.partNumber, randomCar2.name);
 
-    let before = await connection.execute("select brand, model, modelYear, price from car;");
+    let before = await connection.execute("select partNumber, name from carPart;");
     expect(before[0].length).toBe(2);
 
-    let testResponse = await testRequest.delete('/cars/1');
+    let testResponse = await testRequest.delete(`/parts/${randomCar1.partNumber}`);
     expect(testResponse.status).toBe(202);
     
-    let after = await connection.execute("select brand, model, modelYear, price from car;");
+    let after = await connection.execute("select partNumber, name from carPart;");
     expect(after[0].length).toBe(1);
+    expect(after[0][0]).toEqual(randomCar2);
 })
 
-test("DELETE /cars/id fail case", async () =>{
-    let randomCar1 = generateCarData();
-    let randomCar2 = generateCarData();
+test("DELETE /parts/id fail case", async () =>{
+    let randomCar1 = carData.at(0);
+    let randomCar2 =  carData.at(2);
 
-    await model.addCar(randomCar1.model, randomCar1.brand, randomCar1.modelYear, randomCar1.price);
-    await model.addCar(randomCar2.model, randomCar2.brand, randomCar2.modelYear, randomCar2.price);
+    await model.addCarPart(randomCar1.partNumber, randomCar1.name);
+    await model.addCarPart(randomCar2.partNumber, randomCar2.name);
 
-    let before = await connection.execute("select brand, model, modelYear, price from car;");
+    let before = await connection.execute("select partNumber, name from carPart;");
     expect(before[0].length).toBe(2);
 
-    let testResponse = await testRequest.delete('/cars/3');
+    let testResponse = await testRequest.delete('/cars/999999');
     expect(testResponse.status).toBe(404);
     
-    let after = await connection.execute("select brand, model, modelYear, price from car;");
+    let after = await connection.execute("select partNumber, name from carPart;");
     expect(after[0].length).toBe(2);
 })

@@ -1,3 +1,7 @@
+* 
+{
+    font-family: 'Montserrat', sans-serif;
+}
 body { 
     padding: 10px;
 }
@@ -22,3 +26,8 @@ footer {
     text-align: left;
     padding: 8px;
   }
+.title { color:  #0D6EFD }
+#sidebar-wrapper div form button {
+    background-color:  #0D6EFD;
+    color: white
+}

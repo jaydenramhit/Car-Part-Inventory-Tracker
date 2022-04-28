@@ -3,7 +3,8 @@ const app = express();
 const {engine} = require('express-handlebars');
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
-
+const logger = require('./logger');
+const pinohttp = require('pino-http');
 
 app.engine('hbs', engine({ extname: '.hbs'}));
 app.set('view engine', 'hbs');
@@ -14,8 +15,13 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(express.static('public'))
 
+const httpLogger = pinohttp({
+  logger: logger
+});
+app.use(httpLogger);
+
 // Make sure errorController is last!
-const controllers = ['carPartController', 'aboutController', 'homeController', 'errorController'] 
+const controllers = ['homeController', 'aboutController', 'carPartController', 'errorController'] 
 
 app.use(express.json());
 

@@ -7,17 +7,21 @@ const validator = require("./node_modules/validator/validator.js");
  * @returns true or false
  */
 function isValid(name){
-    try {
-        if (validator.isAlphanumeric(name))
-            return true;
-        else
-            throw new Error("Invalid input, check that all fields are alpha numeric where applicable.")
-    }
-    catch(error){
-        console.error(error.message);
-    }  
+    if (validator.isAlphanumeric(name,  ['en-US'], {'ignore': ' _-'}))
+        return true;
+    else
+        return false;
+
+}
+
+function isPartNumber(partNumber){ 
+    if (validator.isNumeric(partNumber.toString()))
+        return true;
+    else
+        return false;
 }
 
 module.exports = {
     isValid,
+    isPartNumber
 }
