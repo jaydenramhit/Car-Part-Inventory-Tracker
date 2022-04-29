@@ -21,7 +21,7 @@ const httpLogger = pinohttp({
 app.use(httpLogger);
 
 // Make sure errorController is last!
-const controllers = ['homeController', 'aboutController', 'carPartController', 'registrationController', 'userController', 'errorController'] 
+const controllers = ['homeController', 'aboutController', 'carPartController', 'registrationController', 'errorController'] 
 
 app.use(express.json());
 
