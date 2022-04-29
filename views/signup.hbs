@@ -1,0 +1,12 @@
+{{#if alertMessage}}
+<div class="alert alert-danger" role="alert">
+  {{alertMessage}}
+</div>
+{{/if}}
+<form method="POST" action="/users/signup">
+    <label for="username">Username</label>
+    <input name="username" type="text" required/>
+    <label for="password">Password</label>
+    <input name="password" type="password" required/>
+    <button type="submit">Submit</button>
+</form>
