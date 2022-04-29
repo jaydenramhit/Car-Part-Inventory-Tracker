@@ -15,10 +15,10 @@ async function createUser(request, response){
 
     try {
         await userModel.addUser(username, password)
-        response.status(201).render('home.hbs', {successMessage: `Congrats ${username} you have been registered!`})
+        response.status(201).render('home.hbs', {successMessage: `Congrats ${username} you have been registered!`}) // Need cookie or session to pass this message to /
     } catch(error) {
             if (error instanceof DatabaseConnectionError){
-                response.status(500).render('signup.hbs', {alertMessage: "Error connecting to database."});
+                response.status(500).render('signup.hbs', {alertMessage: "Error while connecting to database."});
             }
             else if (error instanceof userModel.UserLoginError)
                 response.status(404).render('signup.hbs', {alertMessage: error.message});

@@ -28,8 +28,15 @@ async function initializeUserModel(dbname, reset){
         await connection.execute(dropQuery).then(console.log("Roles table dropped"))
             .catch((error) => { console.error(error) });
     }
-    const createRoleeStatement = `CREATE TABLE IF NOT EXISTS Roles(roleID int, rolename VARCHAR(50), PRIMARY KEY (roleID))`
-    await connection.execute(createRoleeStatement).then(logger.info("Role table created/exists")).catch((error) => { logger.error(error) });
+    const createRoleStatement = `CREATE TABLE IF NOT EXISTS Roles(roleID int, rolename VARCHAR(50), PRIMARY KEY (roleID))`
+    await connection.execute(createRoleStatement).then(logger.info("Role table created/exists")).catch((error) => { logger.error(error) });
+
+    let insertDefaultRoles = 'INSERT IGNORE INTO Roles(roleID, rolename) values (1, "admin");';
+    await connection.execute(insertDefaultRoles).then(logger.info("Role table created/exists")).catch((error) => { logger.error(error) });
+
+    
+    insertDefaultRoles = 'INSERT IGNORE INTO Roles(roleID, rolename) values (2, "guest");';
+    await connection.execute(insertDefaultRoles).then(logger.info("Role table created/exists")).catch((error) => { logger.error(error) });
 
     const createTableStatement = `CREATE TABLE IF NOT EXISTS Users(id int AUTO_INCREMENT, username VARCHAR(15), password varchar(128), roleID int, PRIMARY KEY (id), FOREIGN KEY (roleID) REFERENCES Roles(roleID))`
     await connection.execute(createTableStatement).then(logger.info("User part table created/exists")).catch((error) => { logger.error(error) });
@@ -55,6 +62,11 @@ async function userExists(username){
     }
 }
 
+/**
+ * Method that adds a user to the database given their username and password
+ * @param {string} username 
+ * @param {string} password 
+ */
 async function addUser(username, password) {
 
     if (await userExists(username))
@@ -63,7 +75,7 @@ async function addUser(username, password) {
         if (userUtils.isValidPassword(password)){
             try {
                 let hashedPassword = await userUtils.hashPassword(password);
-                let insertQuery = `INSERT INTO Users(username, password) values ('${username}', '${hashedPassword}');`
+                let insertQuery = `INSERT INTO Users(username, password, roleID) values ('${username}', '${hashedPassword}', '2');`
                 await connection.execute(insertQuery);
             }
             catch (err) {
@@ -76,7 +88,22 @@ async function addUser(username, password) {
     }
     else
         throw new UserLoginError("Username must be between 6 and 15 characters");
+}
 
+/**
+ * Method that returns a list of all registered users and their role
+ */
+async function showAllUsers(){
+    try {
+        const queryStatement = "SELECT username, rolename FROM Users INNER JOIN Roles ON Users.roleID = Roles.roleID;";
+        let userArray = await connection.query(queryStatement)
+        logger.info("Successful search.");
+        return userArray[0];
+    }
+    catch(error){
+        logger.error(error);
+        throw new DatabaseConnectionError();
+    }
 }
 
 class UserLoginError extends Error {}
@@ -86,5 +113,6 @@ module.exports = {
     userExists,
     initializeUserModel,
     getConnection,
-    addUser
+    addUser,
+    showAllUsers
 }
