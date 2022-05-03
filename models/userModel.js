@@ -106,6 +106,17 @@ async function showAllUsers(){
     }
 }
 
+async function validateLogin(username, password){
+    if (await userExists(username)){
+        const queryStatement = `SELECT password FROM Users where username = '${username}'`;
+        let result = await connection.query(queryStatement);
+        return userUtils.validateLogin(password, result[0])
+    }
+    else{
+
+    }
+}
+
 class UserLoginError extends Error {}
 
 module.exports = {
@@ -114,5 +125,6 @@ module.exports = {
     initializeUserModel,
     getConnection,
     addUser,
-    showAllUsers
+    showAllUsers,
+    validateLogin
 }
