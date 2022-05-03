@@ -26,8 +26,14 @@ async function loginUser(request, response){
 
     try {
         let result = await userModel.validateLogin(username, password);
-        if (result === true)
+        if (result === true){
+            // Create a session object that will expire in 2 minutes
+            const sessionId = createSession(username, 2);
+            // Save cookie that will expire.
+            response.cookie("sessionId", sessionId, { expires: sessions[sessionId].expiresAt }); 
+            response.cookie("userRole", await userModel.getRole(username));
             response.status(201).render('home.hbs', {successMessage: `${username} has successfully logged in!`});
+        }
         else
             response.status(404).render('login.hbs', {alertMessage: "Invalid username or password."});
             

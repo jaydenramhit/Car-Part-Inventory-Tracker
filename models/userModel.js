@@ -106,6 +106,23 @@ async function showAllUsers(){
     }
 }
 
+/**
+ * Returns the roleID given a username
+ * @param {string} username 
+ * @returns the roleID
+ */
+async function getRole(username){
+    if (await userExists(username)){
+        const queryStatement = `SELECT Users.roleID FROM Users INNER JOIN Roles on Users.roleID = Roles.roleID where username = '${username}'`;
+        let result = await connection.query(queryStatement);
+        let toReturn = result[0];
+        return toReturn[0].roleID;
+    }
+    else{
+        // todo
+    }
+}
+
 async function validateLogin(username, password){
     if (await userExists(username)){
         const queryStatement = `SELECT password FROM Users where username = '${username}'`;
@@ -113,7 +130,7 @@ async function validateLogin(username, password){
         return userUtils.validateLogin(password, result[0])
     }
     else{
-
+        // show message about username not found
     }
 }
 
@@ -126,5 +143,6 @@ module.exports = {
     getConnection,
     addUser,
     showAllUsers,
-    validateLogin
+    validateLogin,
+    getRole
 }
