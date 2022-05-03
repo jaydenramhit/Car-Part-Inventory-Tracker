@@ -31,3 +31,14 @@ footer {
     background-color:  #0D6EFD;
     color: white
 }
+
+.modal-body {
+    max-height: calc(100vh - 210px);
+    overflow: auto;
+}
+
+.modal-body > .img-responsive {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}

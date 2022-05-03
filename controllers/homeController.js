@@ -48,8 +48,8 @@ function showAddForm(response) {
         endpoint: "/parts",
         method: "post",
         legend: "Please enter details for new car part: ",
-        formfields: [{ field: "partNumber", pretty: "Part Number", type: "number" },
-        { field: "name", pretty: "Part Name" }]
+        formfields: [{ field: "partNumber", pretty: "Part Number", type: "number", required: "required"},
+        { field: "name", pretty: "Part Name", required: "required"}, { field: "condition", pretty: "Condition"}, {field: "image", pretty: "Image URL"}]
     }
 
     response.render('home.hbs', pageData);

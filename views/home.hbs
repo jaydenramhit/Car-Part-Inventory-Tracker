@@ -34,7 +34,7 @@
           <input type="hidden" name="_method" value="{{methodOverride}}" required>
           {{#each formfields}}
             <label for="{{field}}">{{pretty}}</label><br>
-            <input type="{{type}}" id="{{field}}" name="{{field}}" required>
+            <input type="{{type}}" id="{{field}}" name="{{field}}" {{required}}>
             <br>
           {{/each}}
           <button id="submitAction" type="submit" class="btn btn-primary">Submit</button>
@@ -46,14 +46,49 @@
             <tr>
               <th>Part #</th>
               <th>Name</th>
+              <th>Condition</th>
+              <th>Image</th>
             </tr>
             {{#each part}}
             <tr>
               <td>{{partNumber}}</td>
               <td>{{name}}</td>
-            </tr>
+              <td>{{condition}}</td>
+              {{#if image}}
+              <td>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#{{partNumber}}">
+                  Show image
+                </button>
+              </td>
+              </tr>
+              <div class="modal fade" id="{{partNumber}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+              
+                <div class="modal-dialog modal-lg" role="document">
+                  <div class="modal-content">
+              
+                    <!-- Add image inside the body of modal -->
+                    <div class="modal-body">
+                      <h1>{{name}}</h1>
+                      <img class="img-responsive" id="image" src={{image}}
+                        alt="No image associated with this part." />
+                    </div>
+              
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Close
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {{else}}
+              <td></td>
+              </tr>
+              {{/if}}
             {{/each}}    
           </table>
+
         </div>
       {{/if}}
       </div>
@@ -61,3 +96,14 @@
 {{#if message}}
 <h3 id="action-message">{{message}} {{#if part}} Part #{{partNumber}} Name:{{name}} {{/if}}</h3>
 {{/if}}
+
+<!-- https://www.geeksforgeeks.org/how-to-show-images-on-click-using-html/ -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
+    </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+    </script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+    </script>
