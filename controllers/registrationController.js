@@ -12,6 +12,11 @@ const userModel = require('../models/userModel');
 async function createUser(request, response){
     let username = request.body.username;
     let password = request.body.password;
+    let confirmPassword = request.body.confirmPassword;
+
+    if (password != confirmPassword){
+        response.status(404).render('signup.hbs', {alertMessage: "The passwords you have entered are not the same."});
+    }
 
     try {
         await userModel.addUser(username, password)
