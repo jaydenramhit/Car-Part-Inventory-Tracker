@@ -10,7 +10,7 @@ const partController = require('./carPartController');
  */
 function sendHome(request, response) {  
     const justRegistered = request.cookies.justRegistered;
-    if (justRegistered){
+    if (justRegistered == 'true'){
         const username = request.cookies.username;
         response.status(200).render('home.hbs', {successMessage: `Congrats ${username} you have been registered!`});
         response.cookie ('justRegistered', 'false');
