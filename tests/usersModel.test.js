@@ -111,6 +111,6 @@ test("Role Table has default roles", async () => {
     let result = await connection.query("select rolename from Roles");
     expect(Array.isArray(result)).toBe(true);
     expect(result[0].length).toBe(2);
-    expect(result[0][0]).toContain("admin")
-    expect(result[0][1]).toContain("guest")
+    expect(result[0][0].rolename).toContain("admin")
+    expect(result[0][1].rolename).toContain("guest")
 })

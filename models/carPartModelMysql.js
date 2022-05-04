@@ -23,7 +23,7 @@ async function initialize(dbname, reset){
         if (reset)
             resetTable();
     
-        const createTableStatement = `CREATE TABLE IF NOT EXISTS carPart(partNumber int, name VARCHAR(100), PRIMARY KEY (partNumber))`
+        const createTableStatement = 'CREATE TABLE IF NOT EXISTS carPart(partNumber int, name VARCHAR(100), `condition` VARCHAR(50), image VARCHAR(2000), PRIMARY KEY (partNumber))'
         await connection.execute(createTableStatement)
         logger.info("Car part table created/exists");
         return connection
@@ -48,15 +48,15 @@ async function resetTable(){
  * @param {string}} model 
 
  */
-async function addCarPart(partNumber, name){ 
+async function addCarPart(partNumber, name, image, condition){ 
     if (!validUtils.isValid(name) || !validUtils.isPartNumber(partNumber)) {
         throw new InvalidInputError();
     }
     try {
-        const addStatement = `INSERT INTO carPart(partNumber, name) values ('${partNumber}', '${name}');`;
+        const addStatement = 'INSERT INTO carPart(partNumber, name, `condition`' + `, image) values ('${partNumber}', '${name}', '${condition}', '${image}');`;
         await connection.execute(addStatement)
         logger.info("Successful add.");
-        return { "partNumber": partNumber, "name": name };           
+        return { "partNumber": partNumber, "name": name, "condition": condition, "image": image,  };           
     }
     catch(error){
         logger.error(error);
