@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
+    "cookie-parser": "^1.4.6",
     "express": "^4.17.3",
     "express-handlebars": "^6.0.4",
     "jest": "^27.5.1",

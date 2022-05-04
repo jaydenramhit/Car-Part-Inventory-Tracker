@@ -7,12 +7,12 @@ var connection;
 
 /* Data to be used to generate random pokemon for testing */
 const carData = [
-    { partNumber: 1, name: 'Muffler', condition: "New", image: null},
-    { partNumber: 2, name: 'Windshield', condition: "New", image: null},
-    { partNumber: 3, name: 'Side mirror', condition: "", image: null},
-    { partNumber: 4, name: 'Spoiler', condition: "Used", image: null},
-    { partNumber: 5, name: 'Hubcap', condition: "New", image: null},
-    { partNumber: 6, name: 'Tires', condition: "Used", image: null},
+    { partNumber: 1, name: 'Muffler', condition: "New", image: "test"},
+    { partNumber: 2, name: 'Windshield', condition: "New", image: "test"},
+    { partNumber: 3, name: 'Side mirror', condition: "", image: "test"},
+    { partNumber: 4, name: 'Spoiler', condition: "Used", image: "test"},
+    { partNumber: 5, name: 'Hubcap', condition: "New", image: "test"},
+    { partNumber: 6, name: 'Tires', condition: "Used", image: "test"},
 ]
 
 
