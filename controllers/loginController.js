@@ -34,8 +34,15 @@ async function loginUser(request, response){
             response.cookie("userRole", await userModel.getRole(username));
             response.status(201).render('home.hbs', {successMessage: `${username} has successfully logged in!`});
         }
-        else
-            response.status(404).render('login.hbs', {alertMessage: "Invalid username or password."});
+        else{
+            // Error data for when an error occurs
+            const errorData = {
+                errorOccurred: true,
+                errorMessage: "Invalid username or password."
+            }
+
+            response.status(404).render('login.hbs', errorData);
+        }
             
     } catch(error) {
             if (error instanceof DatabaseConnectionError){

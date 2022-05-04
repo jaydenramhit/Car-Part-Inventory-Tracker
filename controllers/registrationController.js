@@ -16,13 +16,13 @@ async function createUser(request, response){
 
     // Making sure the password and confirmed password match
     if (password != confirmPassword){
+        // Error data for when an error occurs
         const errorData = {
             errorOccurred: true,
             errorMessage: "The passwords you have entered are not the same."
         }
         
-        response.status(404)
-            .render('signup.hbs', errorData);
+        response.status(404).render('signup.hbs', errorData);
     }
     else{
         try {
