@@ -7,12 +7,12 @@ var connection;
 
 /* Data to be used to generate random pokemon for testing */
 const carData = [
-    { partNumber: 1, name: 'Muffler'},
-    { partNumber: 2, name: 'Windshield'},
-    { partNumber: 3, name: 'Side mirror'},
-    { partNumber: 4, name: 'Spoiler'},
-    { partNumber: 5, name: 'Hubcap'},
-    { partNumber: 6, name: 'Tires'},
+    { partNumber: 1, name: 'Muffler', condition: "New", image: null},
+    { partNumber: 2, name: 'Windshield', condition: "New", image: null},
+    { partNumber: 3, name: 'Side mirror', condition: "", image: null},
+    { partNumber: 4, name: 'Spoiler', condition: "Used", image: null},
+    { partNumber: 5, name: 'Hubcap', condition: "New", image: null},
+    { partNumber: 6, name: 'Tires', condition: "Used", image: null},
 ]
 
 
@@ -27,11 +27,12 @@ beforeEach(async () => {
 /* #region   */
 test("addCarPart successfully wrote to table", async () => {
     let generatedCar = carData.at(0);
-    await model.addCarPart(generatedCar.partNumber, generatedCar.name);
+    await model.addCarPart(generatedCar.partNumber, generatedCar.name, generatedCar.condition, generatedCar.image);
     let result = await connection.query("select * from carPart");
     expect(Array.isArray(result)).toBe(true);
     expect(result[0][0].partNumber).toBe(generatedCar.partNumber);
     expect(result[0][0].name).toBe(generatedCar.name);
+    expect(result[0][0].condition).toBe(generatedCar.condition);
 })
 
 test("addCarPart failed to write to table due to part number", async () => {
@@ -122,11 +123,11 @@ test("findCarPartByNumber successfully found cars from table", async () => {
     let generatedCar3 = carData.at(2);
     let generatedCar4 = carData.at(3);
     let generatedCar5 = carData.at(4);
-    await model.addCarPart(generatedCar1.partNumber, generatedCar1.name);
-    await model.addCarPart(generatedCar2.partNumber, generatedCar2.name);
-    await model.addCarPart(generatedCar3.partNumber, generatedCar3.name);
-    await model.addCarPart(generatedCar4.partNumber, generatedCar4.name);
-    await model.addCarPart(generatedCar5.partNumber, generatedCar5.name);
+    await model.addCarPart(generatedCar1.partNumber, generatedCar1.name, generatedCar1.condition, generatedCar1.image);
+    await model.addCarPart(generatedCar2.partNumber, generatedCar2.name, generatedCar2.condition, generatedCar2.image);
+    await model.addCarPart(generatedCar3.partNumber, generatedCar3.name, generatedCar3.condition, generatedCar3.image);
+    await model.addCarPart(generatedCar4.partNumber, generatedCar4.name, generatedCar4.condition, generatedCar4.image);
+    await model.addCarPart(generatedCar5.partNumber, generatedCar5.name, generatedCar5.condition, generatedCar5.image);
 
     let result = await model.findCarPartByNumber(generatedCar1.partNumber);
     expect(Array.isArray(result)).toBe(true);

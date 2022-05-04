@@ -12,12 +12,12 @@ afterEach(async () => {
 })
 
 const userData = [
-    { username: 'username1', password: 'P@ssW0rd!'},
-    { username: 'username2', password: '#@ijdsAd2'},
-    { username: 'username3', password: 'T#E2ST!'},
-    { username: 'username4', password: 'thisisAP@ssw0Rd'},
-    { username: 'username5', password: 'testPassword#23'},
-    { username: 'username6', password: 'H3||oW0rld'},
+    { username: 'username1', password: 'P@ssW0rd!', confirmPassword: 'P@ssW0rd!'},
+    { username: 'username2', password: '#@ijdsAd2', confirmPassword: '#@ijdsAd2'},
+    { username: 'username3', password: 'T#E2ST!', confirmPassword: 'T#E2ST!'},
+    { username: 'username4', password: 'thisisAP@ssw0Rd', confirmPassword: 'thisisAP@ssw0Rd'},
+    { username: 'username5', password: 'testPassword#23', confirmPassword: 'testPassword#23'},
+    { username: 'username6', password: 'H3||oW0rld', confirmPassword: 'H3||oW0rld'},
 ]
 
 test("GET /users fail case due to no users", async () => {
@@ -36,7 +36,7 @@ test("POST /users/signup success case", async () => {
 })
 
 test("POST /users/signup fail case due to short username", async () => {
-    let badUser = {username: "admin", password: "dANNjdnsu8*&*&832" };
+    let badUser = {username: "admin", password: "dANNjdnsu8*&*&832", confirmPassword: "dANNjdnsu8*&*&832" };
     let testResponse = await testRequest.post('/users/signup').send(badUser);
     expect(testResponse.status).toBe(404);
     
@@ -45,7 +45,7 @@ test("POST /users/signup fail case due to short username", async () => {
 })
 
 test("POST /users/signup fail case due to long username", async () => {
-    let badUser = {username: "THISISAREALLLLLYLONGUSERNAME", password: "dANNjdnsu8*&*&832" };
+    let badUser = {username: "THISISAREALLLLLYLONGUSERNAME", password: "dANNjdnsu8*&*&832", confirmPassword: "dANNjdnsu8*&*&832" };
     let testResponse = await testRequest.post('/users/signup').send(badUser);
     expect(testResponse.status).toBe(404);
     
@@ -55,6 +55,15 @@ test("POST /users/signup fail case due to long username", async () => {
 
 test("POST /users/signup fail case due to weak password", async () => {
     let badUser = {username: "GoodUsername", password: "password" };
+    let testResponse = await testRequest.post('/users/signup').send(badUser);
+    expect(testResponse.status).toBe(404);
+    
+    let result = await connection.execute("select username from Users;")
+    expect(result[0].length).toBe(0);
+})
+
+test("POST /users/signup fail case due to incorrect confirm password", async () => {
+    let badUser = {username: "GoodUsername", password: "dANNjdnsu8*&*&832", confirmPassword: "fakepassword"  };
     let testResponse = await testRequest.post('/users/signup').send(badUser);
     expect(testResponse.status).toBe(404);
     

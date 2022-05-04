@@ -78,7 +78,7 @@ async function getAllCarParts(request, response){
                 response.status(404).render('home.hbs', {message: "No results"})
             else{
                 for (let i = 0; i < part.length; i++){
-                      if (part[i].image == 'null')
+                      if (part[i].image == 'null' || part[i].image == null || part[i.image == ''])
                         delete part[i].image;
                   }
                 let output = {part, showList: true}
