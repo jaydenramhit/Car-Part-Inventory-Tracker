@@ -10,7 +10,7 @@ async function loginUser(request, response){
     let username = request.body.username;
     let password = request.body.password;
 
-    let result = await userModel.validateLogin(username, password);
+    // let result = await userModel.validateLogin(username, password);
 
     // if(result === true){
     //     response.status(201).render('home.hbs', {successMessage: `Congrats ${username} you have successfully logged in!`})
@@ -26,6 +26,7 @@ async function loginUser(request, response){
 
     try {
         let result = await userModel.validateLogin(username, password);
+
         if (result === true){
             // Create a session object that will expire in 2 minutes
             const sessionId = createSession(username, 2);
@@ -38,18 +39,40 @@ async function loginUser(request, response){
             // Error data for when an error occurs
             const errorData = {
                 errorOccurred: true,
-                errorMessage: "Invalid username or password."
+                errorMessage: "Invalid username or password.",
+                titleName: 'Log In',
+                pathNameForActionForm: 'login',
+                showConfirmPassword: false
             }
 
-            response.status(404).render('login.hbs', errorData);
+            response.status(404).render('loginsignup.hbs', errorData);
         }
             
     } catch(error) {
             if (error instanceof DatabaseConnectionError){
-                response.status(500).render('login.hbs', {alertMessage: "Error while connecting to database."});
+                // Error data for when an error occurs
+                const errorData = {
+                    errorOccurred: true,
+                    errorMessage: "Error while connecting to database.",
+                    titleName: 'Log In',
+                    pathNameForActionForm: 'login',
+                    showConfirmPassword: false
+                }
+
+                response.status(500).render('loginsignup.hbs', {alertMessage: "Error while connecting to database."});
             }
-            else if (error instanceof userModel.UserLoginError)
-                response.status(404).render('login.hbs', {alertMessage: error.message});
+            else if (error instanceof userModel.UserLoginError){
+                // Error data for when an error occurs
+                const errorData = {
+                    errorOccurred: true,
+                    errorMessage: error.message,
+                    titleName: 'Log In',
+                    pathNameForActionForm: 'login',
+                    showConfirmPassword: false
+                }
+
+                response.status(404).render('loginsignup.hbs', errorData);
+            }
             else {
                 response.status(500).render('error.hbs', {message: `Unexpected error while trying to register user: ${error.message}`});
             }
@@ -83,10 +106,13 @@ function createSession(username, numMinutes) {
 }
 
 async function showLogin(request, response){
-    response.status(201).render('login.hbs');
+    response.status(201).render('loginsignup.hbs');
 }
+
 router.get('/users/login', showLogin)
 router.post("/users/login", loginUser)
+
+
 module.exports = {
     router,
     routeRoot

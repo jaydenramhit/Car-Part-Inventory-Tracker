@@ -19,10 +19,13 @@ async function createUser(request, response){
         // Error data for when an error occurs
         const errorData = {
             errorOccurred: true,
-            errorMessage: "The passwords you have entered are not the same."
+            errorMessage: "The passwords you have entered are not the same.",
+            titleName: 'Sign Up',
+            pathNameForActionForm: 'signup',
+            showConfirmPassword: true
         }
         
-        response.status(404).render('signup.hbs', errorData);
+        response.status(404).render('loginsignup.hbs', errorData);
     }
     else{
         try {
@@ -30,10 +33,29 @@ async function createUser(request, response){
             response.status(201).render('home.hbs', {successMessage: `Congrats ${username} you have been registered!`}) // Need cookie or session to pass this message to /
         } catch(error) {
                 if (error instanceof DatabaseConnectionError){
-                    response.status(500).render('signup.hbs', {alertMessage: "Error while connecting to database."});
+                    // Error data for when an error occurs
+                    const errorData = {
+                        errorOccurred: true,
+                        errorMessage: "Error while connecting to database.",
+                        titleName: 'Sign Up',
+                        pathNameForActionForm: 'signup',
+                        showConfirmPassword: true
+                    }
+                    
+                    response.status(500).render('loginsignup.hbs', {alertMessage: "Error while connecting to database."});
                 }
-                else if (error instanceof userModel.UserLoginError)
-                    response.status(404).render('signup.hbs', {alertMessage: error.message});
+                else if (error instanceof userModel.UserLoginError){
+                    // Error data for when an error occurs
+                    const errorData = {
+                        errorOccurred: true,
+                        errorMessage: error.message,
+                        titleName: 'Sign Up',
+                        pathNameForActionForm: 'signup',
+                        showConfirmPassword: true
+                    }
+
+                    response.status(404).render('loginsignup.hbs', errorData);
+                }
                 else {
                     response.status(500).render('error.hbs', {message: `Unexpected error while trying to register user: ${error.message}`});
                 }
@@ -68,7 +90,7 @@ async function createUser(request, response){
 }
 
 async function showSignup(request, response){
-    response.status(201).render('signup.hbs');
+    response.status(201).render('loginsignup.hbs');
 }
 router.get('/users', showUsers);
 router.get('/users/signup', showSignup)
