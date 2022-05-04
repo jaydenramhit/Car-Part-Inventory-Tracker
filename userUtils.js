@@ -1,6 +1,7 @@
 const validator = require("validator/validator");
 const model = require("./models/userModel");
 const bcrypt = require('bcrypt');
+const res = require("express/lib/response");
 const saltRounds = 10;
 
 
@@ -28,8 +29,14 @@ async function hashPassword(password){
     let hashedPassword = await bcrypt.hash(password, saltRounds);
     return hashedPassword;
 }
+
+async function validateLogin(plain, hash){
+    const result = await bcrypt.compare(plain, hash[0].password)
+    return result;
+}
 module.exports = {
     isValidUsername,
     isValidPassword,
-    hashPassword
+    hashPassword,
+    validateLogin
 }

@@ -54,9 +54,6 @@ async function createUser(request, response){
     }
 }
 
-
-
-
 async function showSignup(request, response){
     response.status(201).render('signup.hbs');
 }
