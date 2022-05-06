@@ -6,6 +6,11 @@ const userModel = require('../models/userModel');
 const uuid = require('uuid');
 const sessions = {};
 
+/**
+ * Handles the request for logging in a user and forms the appropriate response.
+ * @param {*} request 
+ * @param {*} response 
+ */
 async function loginUser(request, response){
     let username = request.body.username;
     let password = request.body.password;
@@ -106,7 +111,14 @@ function createSession(username, numMinutes) {
 }
 
 async function showLogin(request, response){
-    response.status(201).render('loginsignup.hbs');
+    // Page data 
+    const pageData = {
+        titleName: 'Log In',
+        pathNameForActionForm: 'login',
+        showConfirmPassword: false
+    }
+
+    response.status(201).render('loginsignup.hbs', pageData);
 }
 
 router.get('/users/login', showLogin)
