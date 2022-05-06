@@ -54,33 +54,29 @@ async function loginUser(request, response){
         }
             
     } catch(error) {
-            if (error instanceof DatabaseConnectionError){
-                // Error data for when an error occurs
-                const errorData = {
-                    errorOccurred: true,
-                    errorMessage: "Error while connecting to database.",
-                    titleName: 'Log In',
-                    pathNameForActionForm: 'login',
-                    showConfirmPassword: false
-                }
 
-                response.status(500).render('loginsignup.hbs', errorData);
-            }
-            else if (error instanceof userModel.UserLoginError){
-                // Error data for when an error occurs
-                const errorData = {
-                    errorOccurred: true,
-                    errorMessage: error.message,
-                    titleName: 'Log In',
-                    pathNameForActionForm: 'login',
-                    showConfirmPassword: false
-                }
+        // Error data for when an error occurs
+        const errorData = {
+            errorOccurred: true,
+            errorMessage: "",
+            titleName: 'Log In',
+            pathNameForActionForm: 'login',
+            showConfirmPassword: false
+        }
 
-                response.status(404).render('loginsignup.hbs', errorData);
-            }
-            else {
-                response.status(500).render('error.hbs', {message: `Unexpected error while trying to register user: ${error.message}`});
-            }
+        if (error instanceof DatabaseConnectionError){
+            errorData.errorMessage = "Error while connecting to database.";
+
+            response.status(500).render('loginsignup.hbs', errorData);
+        }
+        else if (error instanceof userModel.UserLoginError){
+           errorData.errorMessage = error.message;
+
+            response.status(404).render('loginsignup.hbs', errorData);
+        }
+        else {
+            response.status(500).render('error.hbs', {message: `Unexpected error while trying to register user: ${error.message}`});
+        }
     }
 
 }

@@ -50,11 +50,13 @@ async function getConnection(){
 async function userExists(username){
     try {
         const findUser = `SELECT username FROM Users where username = '${username}'`;
-        let userArray = await connection.query(findUser).then(console.log("Found username")).catch((error) => { console.error(error) });
-        if (userArray[0].length != 0)
+        const [userArray, fields] = await connection.query(findUser);
+        if (userArray.length != 0)
             return true;
-        else
+        else{
+            logger.info("Found username")     
             return false;
+        }
     }
     catch (err){
         logger.error(err)
