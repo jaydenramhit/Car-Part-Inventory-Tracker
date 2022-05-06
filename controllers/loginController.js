@@ -38,6 +38,7 @@ async function loginUser(request, response){
             // Save cookie that will expire.
             response.cookie("sessionId", sessionId, { expires: sessions[sessionId].expiresAt }); 
             response.cookie("userRole", await userModel.getRole(username));
+            response.cookie("username", username);
             response.status(201).render('home.hbs', {successMessage: `${username} has successfully logged in!`});
         }
         else{

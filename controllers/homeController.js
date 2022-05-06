@@ -8,8 +8,17 @@ const partController = require('./carPartController');
  * @param {*} request 
  * @param {*} response 
  */
-function sendHome(request, response) {
-    response.status(200).render('home.hbs');    
+function sendHome(request, response) {  
+    const justRegistered = request.cookies.justRegistered;
+    if (justRegistered == 'true'){
+        const username = request.cookies.username;
+        response.status(200).render('home.hbs', {successMessage: `Congrats ${username} you have been registered!`});
+        response.cookie ('justRegistered', 'false');
+    }
+    else {
+        response.status(200).render('home.hbs');
+    }     
+
 }
 
 /**

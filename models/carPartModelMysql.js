@@ -48,7 +48,7 @@ async function resetTable(){
  * @param {string}} model 
 
  */
-async function addCarPart(partNumber, name, image, condition){ 
+async function addCarPart(partNumber, name, condition, image){ 
     if (!validUtils.isValid(name) || !validUtils.isPartNumber(partNumber)) {
         throw new InvalidInputError();
     }

@@ -29,8 +29,12 @@ async function createUser(request, response){
     }
     else{
         try {
-            await userModel.addUser(username, password)
-            response.status(201).render('home.hbs', {successMessage: `Congrats ${username} you have been registered!`}) // Need cookie or session to pass this message to /
+            await userModel.addUser(username, password);
+            response.cookie("username", username);
+            response.status(201)
+                .cookie("justRegistered", "true");
+                // .redirect('/')// Need cookie or session to pass this message to /
+            response.render('home.hbs', {successMessage: `Congrats ${username} you have been registered!`}) // Need cookie or session to pass this message to /
         } catch(error) {
                 if (error instanceof DatabaseConnectionError){
                     // Error data for when an error occurs
