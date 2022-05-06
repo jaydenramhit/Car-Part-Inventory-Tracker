@@ -1,5 +1,8 @@
 * 
 {
+    padding:0;
+    margin:0;
+    box-sizing: border-box;
     font-family: 'Montserrat', sans-serif;
 }
 body { 
@@ -42,3 +45,20 @@ footer {
     margin-left: auto;
     margin-right: auto;
 }
+
+/* #region loginsignup.hbs */
+
+#form-container{
+    display:flex;
+   justify-content: center;
+   align-items: center;
+   flex-direction: column;
+   width: 100%;
+}
+
+
+#form-loginsignup > *{
+    margin-top:1.5rem;
+}
+
+/* #endregion */

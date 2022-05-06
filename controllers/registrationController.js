@@ -90,7 +90,14 @@ async function createUser(request, response){
 }
 
 async function showSignup(request, response){
-    response.status(201).render('loginsignup.hbs');
+    // Page data 
+    const pageData = {
+        titleName: 'Sign Up',
+        pathNameForActionForm: 'signup',
+        showConfirmPassword: true
+    }
+
+    response.status(201).render('loginsignup.hbs', pageData);
 }
 router.get('/users', showUsers);
 router.get('/users/signup', showSignup)

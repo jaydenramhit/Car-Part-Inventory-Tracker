@@ -59,7 +59,7 @@ async function loginUser(request, response){
                     showConfirmPassword: false
                 }
 
-                response.status(500).render('loginsignup.hbs', {alertMessage: "Error while connecting to database."});
+                response.status(500).render('loginsignup.hbs', errorData);
             }
             else if (error instanceof userModel.UserLoginError){
                 // Error data for when an error occurs
