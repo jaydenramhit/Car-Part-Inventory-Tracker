@@ -139,7 +139,7 @@ async function findCarPartByNumber(partNumber){
  */
 async function findAllCarParts(){
     try {
-        const queryStatement = "SELECT * FROM carPart;";
+        const queryStatement = "SELECT partNumber, name, `condition`, image FROM carPart;";
         let carPartArray = await connection.query(queryStatement);
         logger.info("Successful found ALL the car parts in the database.");
 
@@ -219,9 +219,10 @@ async function updateCarPartName(partNumber, name){
     }
 
     try {
-        const [rows, fields] = await findCarPartByNumber(partNumber);
+        const carPart = await findCarPartByNumber(partNumber);
 
-        if(rows.length != 0){
+        // Checks if the array length of the found car part is not 0
+        if(carPart[0].length != 0){
             logger.info("Car part EXISTS - Verify that the car part exists -- verifyCarPartExists");
             return true;
         }
