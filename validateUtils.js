@@ -1,38 +1,58 @@
+'use strict';
 
 const validator = require("./node_modules/validator/validator.js");
 
 /**
- * Validates that car part name is an alphanumeric string
- * @param {*} name 
- * @returns true or false
+ * Validates that the specified car part name is an alphanumeric string.
+ * @param {*} name The name of the car part.
+ * @returns True if the name is an alphanumeric string; otherwise false.
  */
 function isValid(name){
-    if (validator.isAlphanumeric(name,  ['en-US'], {'ignore': ' _-'}))
-        return true;
-    else
-        return false;
+    return validator.isAlphanumeric(name,  ['en-US'], {'ignore': ' _-'});
+    // if (validator.isAlphanumeric(name,  ['en-US'], {'ignore': ' _-'}))
+    //     return true;
+    // else
+    //     return false;
 
 }
 
+/**
+ * Validates that the specified car part number is numeric.
+ * @param {*} partNumber The part number of the car part.
+ * @returns True if the part number is numeric; otherwise false.
+ */
 function isPartNumber(partNumber){ 
-    if (validator.isNumeric(partNumber.toString()))
-        return true;
-    else
-        return false;
+    return validator.isNumeric(partNumber.toString());
+    // if (validator.isNumeric(partNumber.toString()))
+    //     return true;
+    // else
+    //     return false;
 }
 
-// https://thispointer.com/javascript-check-if-string-is-url/
+/**
+ * Validates that the specified string is a valid URL.
+ * // https://thispointer.com/javascript-check-if-string-is-url/
+ * @param {*} string The specified string to validate.
+ * @returns True if the specified string is a valid URL; otherwise false.
+ */
 function isURL(string) {
     const matchpattern = /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/gm;
     return matchpattern.test(string);
-  }
-
-function stringIsEmpty(string){
-    if (string == "")
-        return true;
-    else
-        return false;
 }
+
+/**
+ * Checks if the specified string is empty.
+ * @param {*} string The specified string.
+ * @returns True if the specified string is empty; otherwise false.
+ */
+function stringIsEmpty(string){
+    return string === "";
+    // if (string == "")
+    //     return true;
+    // else
+    //     return false;
+}
+
 
 module.exports = {
     isValid,
