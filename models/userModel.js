@@ -164,6 +164,7 @@ async function getRole(username){
         return toReturn[0].roleID;
     }
     else{
+        logger.warn(`User doesn't exist - 'Failed to retrieve the role id of the user (${username}) -- getRole`);
         // todo
     }
 }
@@ -204,6 +205,7 @@ async function validateLogin(username, password){
         return userUtils.validateLogin(password, result[0])
     }
     else{
+        logger.warn(`User doesn't exist - Failed to validate user (${username}) input -- validateLogin`);
         // show message about username not found
     }
 }
