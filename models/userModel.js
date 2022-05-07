@@ -89,6 +89,8 @@ async function getConnection(){
 
 //#endregion
 
+//#region Reset table
+
 /**
  * Drops the specified table from the database.
  * @param {*} tableName The name of the table to be dropped.
@@ -104,6 +106,8 @@ async function getConnection(){
         throw new DatabaseConnectionError();
     }
 }
+
+//#endregion
 
 /**
  * Adds a user to the database with the given username and password.
