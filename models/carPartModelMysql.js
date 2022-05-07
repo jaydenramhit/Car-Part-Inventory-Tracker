@@ -222,7 +222,7 @@ async function updateCarPartName(partNumber, name){
         const carPart = await findCarPartByNumber(partNumber);
 
         // Checks if the array length of the found car part is not 0
-        if(carPart[0].length != 0){
+        if(carPart.length != 0){
             logger.info("Car part EXISTS - Verify that the car part exists -- verifyCarPartExists");
             return true;
         }
