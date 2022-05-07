@@ -30,20 +30,28 @@ async function createUser(request, response){
         
         response.status(404).render('loginsignup.hbs', errorData);
     }
+    // If both passwords match
     else{
         try {
             await userModel.addUser(username, password);
+
+            // Save cookie that will expire.
             response.cookie("username", username);
-            response.status(201)
-                .cookie("justRegistered", "true");
+            response.cookie("justRegistered", "true");
                 // .redirect('/')// Need cookie or session to pass this message to /
-            response.render('home.hbs', {successMessage: `Congrats ${username} you have been registered!`}) // Need cookie or session to pass this message to /
+
+            // Render the home page
+            response.status(201).
+                render('home.hbs', {successMessage: `Congrats ${username} you have been registered!`}) // Need cookie or session to pass this message to /
         } catch(error) {
 
             // Error data for when an error occurs
             const errorData = {
                 errorOccurred: true,
                 errorMessage: "",
+                alertLevel: 'danger',
+                alertLevelText: 'Danger',
+                alertHref: 'exclamation-triangle-fill',
                 titleName: 'Sign Up',
                 pathNameForActionForm: 'signup',
                 showConfirmPassword: true,
@@ -52,19 +60,22 @@ async function createUser(request, response){
                 dontHaveAccountText: "Already have an account?"
             }
 
-                if (error instanceof DatabaseConnectionError){
-                    errorData.errorMessage = "Error while connecting to database.";
-                    
-                    response.status(500).render('loginsignup.hbs', {alertMessage: "Error while connecting to database."});
-                }
-                else if (error instanceof userModel.UserLoginError){
-                    errorData.errorMessage = error.message;
+            // If the error is an instance of the DatabaseConnectionError error
+            if (error instanceof DatabaseConnectionError){
+                errorData.errorMessage = "Error while connecting to database.";
+                
+                response.status(500).render('loginsignup.hbs', {alertMessage: "Error while connecting to database."});
+            }
+            // If the error is an instance of the UserLoginError error
+            else if (error instanceof userModel.UserLoginError){
+                errorData.errorMessage = error.message;
 
-                    response.status(404).render('loginsignup.hbs', errorData);
-                }
-                else {
-                    response.status(500).render('error.hbs', {message: `Unexpected error while trying to register user: ${error.message}`});
-                }
+                response.status(404).render('loginsignup.hbs', errorData);
+            }
+            // If any other error occurs
+            else {
+                response.status(500).render('error.hbs', {message: `Unexpected error while trying to register user: ${error.message}`});
+            }
         }
     }
 }
@@ -87,17 +98,26 @@ async function createUser(request, response){
         })
     }
     catch (error){
+         // If the error is an instance of the DatabaseConnectionError error
         if (error instanceof DatabaseConnectionError){
             response.status(404).render('users.hbs', {alertMessage: "Error while connecting to database."})
         }
-        else
+         // If any other error occurs
+        else{
             response.status(500).render('error.hbs', {message: `Unexpected error while trying to register user: ${error.message}`});
+        }
     }
 }
 
+/**
+ * Renders the signup page with the given data. 
+ * @param {*} request 
+ * @param {*} response 
+ */
 async function showSignup(request, response){
     // Page data 
     const pageData = {
+        errorOccurred: false,
         titleName: 'Sign Up',
         pathNameForActionForm: 'signup',
         showConfirmPassword: true,
@@ -108,9 +128,12 @@ async function showSignup(request, response){
 
     response.status(201).render('loginsignup.hbs', pageData);
 }
+
 router.get('/users', showUsers);
 router.get('/users/signup', showSignup)
 router.post("/users/signup", createUser)
+
+
 module.exports = {
     router,
     routeRoot

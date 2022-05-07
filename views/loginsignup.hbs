@@ -14,8 +14,8 @@
 
 <!--Show an error message if an error occurs-->
 {{#if alertOccurred}}
-    <div class="alert alert-danger d-flex align-items-center" role="alert">
-        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+    <div class="alert alert-{{alertLevel}} d-flex align-items-center" role="alert">
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="{{alertLevelText}}:"><use xlink:href="#{{alertHref}}exclamation-triangle-fill"/></svg>
         <div>{{alertMessage}}</div>
     </div>
 {{/if}}
@@ -62,7 +62,7 @@
        <hr>
 
       <!--To go to the other form (signup or login)-->
-      <p style="text-align: center; font-size: 15.5px;">
+      <p style="text-align: center; font-size: 15.5px; margin-top: -1px;">
           {{dontHaveAccountText}} 
           <a href="/users/{{oppositeFormAction}}" style="text-decoration: none;">
           {{oppositeFormName}}
