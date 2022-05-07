@@ -123,6 +123,12 @@ async function getRole(username){
     }
 }
 
+/**
+ * Calls a method in utils that compares the plain password to the hashed password
+ * @param {string} username 
+ * @param {string} password 
+ * @returns true if login information is valid, false otherwise.
+ */
 async function validateLogin(username, password){
     if (await userExists(username)){
         const queryStatement = `SELECT password FROM Users where username = '${username}'`;
