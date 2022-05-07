@@ -15,7 +15,7 @@
 <!--Show an error message if an error occurs-->
 {{#if alertOccurred}}
     <div class="alert alert-{{alertLevel}} d-flex align-items-center" role="alert">
-        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="{{alertLevelText}}:"><use xlink:href="#{{alertHref}}exclamation-triangle-fill"/></svg>
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="{{alertLevelText}}:"><use xlink:href="#{{alertHref}}"/></svg>
         <div>{{alertMessage}}</div>
     </div>
 {{/if}}

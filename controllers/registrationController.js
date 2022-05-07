@@ -18,8 +18,11 @@ async function createUser(request, response){
     if (password != confirmPassword){
         // Error data for when an error occurs
         const errorData = {
-            errorOccurred: true,
-            errorMessage: "The passwords you have entered are not the same.",
+            alertOccurred: true,
+            alertMessage: "The passwords you have entered are not the same.",
+            alertLevel: 'danger',
+            alertLevelText: 'Danger',
+            alertHref: 'exclamation-triangle-fill',
             titleName: 'Sign Up',
             pathNameForActionForm: 'signup',
             showConfirmPassword: true,
@@ -47,8 +50,8 @@ async function createUser(request, response){
 
             // Error data for when an error occurs
             const errorData = {
-                errorOccurred: true,
-                errorMessage: "",
+                alertOccurred: true,
+                alertMessage: "",
                 alertLevel: 'danger',
                 alertLevelText: 'Danger',
                 alertHref: 'exclamation-triangle-fill',
@@ -62,13 +65,13 @@ async function createUser(request, response){
 
             // If the error is an instance of the DatabaseConnectionError error
             if (error instanceof DatabaseConnectionError){
-                errorData.errorMessage = "Error while connecting to database.";
+                errorData.alertMessage = "Error while connecting to database.";
                 
                 response.status(500).render('loginsignup.hbs', {alertMessage: "Error while connecting to database."});
             }
             // If the error is an instance of the UserLoginError error
             else if (error instanceof userModel.UserLoginError){
-                errorData.errorMessage = error.message;
+                errorData.alertMessage = error.message;
 
                 response.status(404).render('loginsignup.hbs', errorData);
             }
@@ -117,7 +120,7 @@ async function createUser(request, response){
 async function showSignup(request, response){
     // Page data 
     const pageData = {
-        errorOccurred: false,
+        alertOccurred: false,
         titleName: 'Sign Up',
         pathNameForActionForm: 'signup',
         showConfirmPassword: true,

@@ -47,8 +47,8 @@ async function loginUser(request, response){
         else{
             // Error data for when an error occurs
             const errorData = {
-                errorOccurred: true,
-                errorMessage: "Invalid username or password.",
+                alertOccurred: true,
+                alertMessage: "Invalid username or password.",
                 alertLevel: 'danger',
                 alertLevelText: 'Danger',
                 alertHref: 'exclamation-triangle-fill',
@@ -67,8 +67,8 @@ async function loginUser(request, response){
 
         // Error data for when an error occurs
         const errorData = {
-            errorOccurred: true,
-            errorMessage: "",
+            alertOccurred: true,
+            alertMessage: "",
             alertLevel: 'danger',
             alertLevelText: 'Danger',
             alertHref: 'exclamation-triangle-fill',
@@ -82,13 +82,13 @@ async function loginUser(request, response){
 
         // If the error is an instance of the DatabaseConnectionError error
         if (error instanceof DatabaseConnectionError){
-            errorData.errorMessage = "Error while connecting to database.";
+            errorData.alertMessage = "Error while connecting to database.";
 
             response.status(500).render('loginsignup.hbs', errorData);
         }
         // If the error is an instance of the UserLoginError error
         else if (error instanceof userModel.UserLoginError){
-           errorData.errorMessage = error.message;
+           errorData.alertMessage = error.message;
 
             response.status(404).render('loginsignup.hbs', errorData);
         }
@@ -107,7 +107,7 @@ async function loginUser(request, response){
 async function showLogin(request, response){
     // Page data 
     const pageData = {
-        errorOccurred: false,
+        alertOccurred: false,
         titleName: 'Log In',
         pathNameForActionForm: 'login',
         showConfirmPassword: false,
