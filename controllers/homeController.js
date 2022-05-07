@@ -8,8 +8,16 @@ const partController = require('./carPartController');
  * @param {*} request 
  * @param {*} response 
  */
-function sendHome(request, response) {
-    response.status(200).render('home.hbs');    
+function sendHome(request, response) {  
+    const justRegistered = request.cookies.justRegistered;
+    if (justRegistered == 'true'){
+        const username = request.cookies.username;
+        response.status(200).render('home.hbs', {successMessage: `Congrats ${username} you have been registered!`});
+        response.cookie ('justRegistered', 'false');
+    }
+    else {
+        response.status(200).render('home.hbs');
+    }     
 }
 
 /**
@@ -48,8 +56,8 @@ function showAddForm(response) {
         endpoint: "/parts",
         method: "post",
         legend: "Please enter details for new car part: ",
-        formfields: [{ field: "partNumber", pretty: "Part Number", type: "number" },
-        { field: "name", pretty: "Part Name" }]
+        formfields: [{ field: "partNumber", pretty: "Part Number", type: "number", required: "required"},
+        { field: "name", pretty: "Part Name", required: "required"}, { field: "condition", pretty: "Condition"}, {field: "image", pretty: "Image URL"}]
     }
 
     response.render('home.hbs', pageData);
@@ -87,6 +95,7 @@ function showEditForm(response) {
         formfields: [{field:"partNumber", pretty:"Original Part Number", type: "number"}, 
                      {field:"name", pretty:"New Part Name"}]
     };
+
     response.render('home.hbs',pageData);
 }
 
@@ -104,11 +113,14 @@ function showDeleteForm(response) {
         legend:"Please enter the part number of the part that should be deleted:",
         formfields: [{field:"partNumber", pretty:"Part Number", type: "number"}]
     };
+
     response.render('home.hbs',pageData);
 }
 
 router.get('/', sendHome);
-router.post('/', showForm)
+router.post('/', showForm);
+
+
 module.exports = {
     router,
     routeRoot
