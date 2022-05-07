@@ -22,7 +22,7 @@ async function createUser(request, response){
             errorMessage: "The passwords you have entered are not the same.",
             titleName: 'Sign Up',
             pathNameForActionForm: 'signup',
-            showConfirmPassword: true
+            showConfirmPassword: true,
         }
         
         response.status(404).render('loginsignup.hbs', errorData);

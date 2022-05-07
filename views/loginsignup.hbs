@@ -31,28 +31,31 @@
       
       <!--Username-->
       <div class="form-group row justify-content-center">
-          <label for="username">Username</label>
-          <input name="username" id="username" type="text" class="form-control" required/>
+          <label for="username" class="form-label">Username</label>
+          <input name="username" id="username" placeholder="Enter username"
+              type="text" class="form-control" required/>
       </div>
 
       <!--Password-->
       <div class="form-group row justify-content-center">
-          <label for="password">Password</label>
-          <input name="password" id="password" type="password" class="form-control" required/>
+          <label for="password" class="form-label">Password</label>
+          <input name="password" id="password" placeholder="Enter password"
+                type="password" class="form-control" required/>
       </div>
 
       <!--Show the confirm password if sign up form-->
       {{#if showConfirmPassword}}
           <!--Confirming password (for security purposes)-->
           <div class="form-group row justify-content-center">
-              <label for="confirmPassword">Confirm Password</label>
-              <input name="confirmPassword" type="password" class="form-control" required/>
+              <label for="confirmPassword" class="form-label">Confirm Password</label>
+              <input name="confirmPassword" type="password" 
+                      class="form-control" placeholder="Confirm password" required/>
           </div>
       {{/if}}
 
       <!--Submit button-->
       <div class="row justify-content-center">
-          <button class="btn btn-primary" style="width:100%;" type="submit">Submit</button>
+          <button class="btn btn-primary submit-btn" style="width:100%;" type="submit">{{titleName}}</button>
       </div>
   </form>
 

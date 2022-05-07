@@ -61,10 +61,24 @@ footer {
     margin-top:1.5rem;
 }
 
+.form-label{
+    margin-bottom: 5px;
+
+}
+.submit-btn{
+    margin-top: 0.5rem;
+}
+input::placeholder{
+    font-size: 14px;
+}
+.form-control{
+    border: 1.25px solid darkgray;
+}
+
 /* #endregion */
 
 label{
-text-align:start;
+    text-align:start;
 }
 legend{
     text-align: center;
