@@ -74,6 +74,12 @@ input::placeholder{
 .form-control{
     border: 1.25px solid darkgray;
 }
+#line-break-form{
+    width: 100%;
+    color: black;
+    height: 2px;
+    z-index: 999;
+}
 
 /* #endregion */
 

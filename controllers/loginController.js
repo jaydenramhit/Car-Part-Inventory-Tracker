@@ -48,7 +48,10 @@ async function loginUser(request, response){
                 errorMessage: "Invalid username or password.",
                 titleName: 'Log In',
                 pathNameForActionForm: 'login',
-                showConfirmPassword: false
+                showConfirmPassword: false,
+                oppositeFormAction: 'signup',
+                oppositeFormName: 'Sign up',
+                dontHaveAccountText: "Don't have an account?"
             }
 
             response.status(404).render('loginsignup.hbs', errorData);
@@ -62,7 +65,10 @@ async function loginUser(request, response){
             errorMessage: "",
             titleName: 'Log In',
             pathNameForActionForm: 'login',
-            showConfirmPassword: false
+            showConfirmPassword: false,
+            oppositeFormAction: 'signup',
+            oppositeFormName: 'Sign up',
+            dontHaveAccountText: "Don't have an account?"
         }
 
         if (error instanceof DatabaseConnectionError){
@@ -112,7 +118,10 @@ async function showLogin(request, response){
     const pageData = {
         titleName: 'Log In',
         pathNameForActionForm: 'login',
-        showConfirmPassword: false
+        showConfirmPassword: false,
+        oppositeFormAction: 'signup',
+        oppositeFormName: 'Sign up',
+        dontHaveAccountText: "Don't have an account?"
     }
 
     response.status(201).render('loginsignup.hbs', pageData);

@@ -23,6 +23,9 @@ async function createUser(request, response){
             titleName: 'Sign Up',
             pathNameForActionForm: 'signup',
             showConfirmPassword: true,
+            oppositeFormAction: 'login',
+            oppositeFormName: 'Log in',
+            dontHaveAccountText: "Already have an account?"
         }
         
         response.status(404).render('loginsignup.hbs', errorData);
@@ -36,27 +39,26 @@ async function createUser(request, response){
                 // .redirect('/')// Need cookie or session to pass this message to /
             response.render('home.hbs', {successMessage: `Congrats ${username} you have been registered!`}) // Need cookie or session to pass this message to /
         } catch(error) {
+
+            // Error data for when an error occurs
+            const errorData = {
+                errorOccurred: true,
+                errorMessage: "",
+                titleName: 'Sign Up',
+                pathNameForActionForm: 'signup',
+                showConfirmPassword: true,
+                oppositeFormAction: 'login',
+                oppositeFormName: 'Log in',
+                dontHaveAccountText: "Already have an account?"
+            }
+
                 if (error instanceof DatabaseConnectionError){
-                    // Error data for when an error occurs
-                    const errorData = {
-                        errorOccurred: true,
-                        errorMessage: "Error while connecting to database.",
-                        titleName: 'Sign Up',
-                        pathNameForActionForm: 'signup',
-                        showConfirmPassword: true
-                    }
+                    errorData.errorMessage = "Error while connecting to database.";
                     
                     response.status(500).render('loginsignup.hbs', {alertMessage: "Error while connecting to database."});
                 }
                 else if (error instanceof userModel.UserLoginError){
-                    // Error data for when an error occurs
-                    const errorData = {
-                        errorOccurred: true,
-                        errorMessage: error.message,
-                        titleName: 'Sign Up',
-                        pathNameForActionForm: 'signup',
-                        showConfirmPassword: true
-                    }
+                    errorData.errorMessage = error.message;
 
                     response.status(404).render('loginsignup.hbs', errorData);
                 }
@@ -98,7 +100,10 @@ async function showSignup(request, response){
     const pageData = {
         titleName: 'Sign Up',
         pathNameForActionForm: 'signup',
-        showConfirmPassword: true
+        showConfirmPassword: true,
+        oppositeFormAction: 'login',
+        oppositeFormName: 'Log in',
+        dontHaveAccountText: "Already have an account?"
     }
 
     response.status(201).render('loginsignup.hbs', pageData);

@@ -57,6 +57,13 @@
       <div class="row justify-content-center">
           <button class="btn btn-primary submit-btn" style="width:100%;" type="submit">{{titleName}}</button>
       </div>
+
+      <!--Create a small thin line after the submit button-->
+       <hr>
+
+      <!--To go to the other form (signup or login)-->
+      <p style="text-align: center; font-size: 15.5px;">{{dontHaveAccountText}} <a href="/users/{{oppositeFormAction}}">{{oppositeFormName}}</a></p>
+
   </form>
 
 </section>
