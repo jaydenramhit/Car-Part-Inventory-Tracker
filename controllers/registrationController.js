@@ -1,3 +1,5 @@
+'use strict';
+
 const express = require('express');
 const { DatabaseConnectionError } = require('../models/carPartModelMysql');
 const router = express.Router();

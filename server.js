@@ -1,3 +1,5 @@
+'use strict';
+
 const app = require('./app.js');
 const port = 1339;
 const initializer = require('./models/initializerModel')
@@ -10,7 +12,7 @@ let dbName = process.argv[2];
 
 // If the database name is not specified, initialize it
 if (!dbName) {
-         dbName = 'carPart_db';
+    dbName = 'carPart_db';
 }
 
 

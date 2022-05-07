@@ -1,3 +1,5 @@
+'use strict';
+
 const mysql = require('mysql2/promise');
 const validUtils = require('../validateUtils.js');
 const logger = require('../logger');
@@ -40,7 +42,6 @@ async function initialize(dbname, reset){
         logger.error(error.message);
         throw new DatabaseConnectionError();
     }
-  
 }
 
 //#endregion

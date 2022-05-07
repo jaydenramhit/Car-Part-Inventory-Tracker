@@ -1,3 +1,5 @@
+'use strict';
+
 const mysql = require('mysql2/promise');
 const validUtils = require('../validateUtils.js');
 const userUtils = require('../userUtils.js');
