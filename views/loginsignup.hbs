@@ -62,7 +62,12 @@
        <hr>
 
       <!--To go to the other form (signup or login)-->
-      <p style="text-align: center; font-size: 15.5px;">{{dontHaveAccountText}} <a href="/users/{{oppositeFormAction}}">{{oppositeFormName}}</a></p>
+      <p style="text-align: center; font-size: 15.5px;">
+          {{dontHaveAccountText}} 
+          <a href="/users/{{oppositeFormAction}}" style="text-decoration: none;">
+          {{oppositeFormName}}
+          </a>
+      </p>
 
   </form>
 
