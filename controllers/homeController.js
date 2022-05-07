@@ -18,7 +18,6 @@ function sendHome(request, response) {
     else {
         response.status(200).render('home.hbs');
     }     
-
 }
 
 /**
@@ -96,6 +95,7 @@ function showEditForm(response) {
         formfields: [{field:"partNumber", pretty:"Original Part Number", type: "number"}, 
                      {field:"name", pretty:"New Part Name"}]
     };
+
     response.render('home.hbs',pageData);
 }
 
@@ -113,11 +113,14 @@ function showDeleteForm(response) {
         legend:"Please enter the part number of the part that should be deleted:",
         formfields: [{field:"partNumber", pretty:"Part Number", type: "number"}]
     };
+
     response.render('home.hbs',pageData);
 }
 
 router.get('/', sendHome);
-router.post('/', showForm)
+router.post('/', showForm);
+
+
 module.exports = {
     router,
     routeRoot
