@@ -12,7 +12,7 @@ var connection;
 /**
  * Initializes a connection to database for user model.
  * @param {*} dbname The database name.
- * @param {*} reset True if a new database connection to the database; otherwise false.
+ * @param {*} reset True if resetting the tables; otherwise false.
  * @returns The connection to the database.
  */
 async function initializeUserModel(dbname, reset){
@@ -29,20 +29,22 @@ async function initializeUserModel(dbname, reset){
         // Dropping the tables if resetting them
         if (reset) {
             // Dropping the Users table
-            let dropQuery = "DROP TABLE IF EXISTS Users";
-            await connection.execute(dropQuery);
-            logger.info("User table dropped");
+            resetTable("Users");
+            // let dropQuery = "DROP TABLE IF EXISTS Users";
+            // await connection.execute(dropQuery);
+            // logger.info("Users table dropped");
             // .then(console.log("User table dropped")).catch((error) => { console.error(error) });
     
             // Dropping the Roles table
-            dropQuery = "DROP TABLE IF EXISTS Roles";
-            await connection.execute(dropQuery);
-            logger.info("Roles table dropped");
+            resetTable("Roles");
+            // dropQuery = "DROP TABLE IF EXISTS Roles";
+            // await connection.execute(dropQuery);
+            // logger.info("Roles table dropped");
             // .then(console.log("Roles table dropped")).catch((error) => { console.error(error) });
         }
         
         // Creating the Roles table
-        const createRoleStatement = `CREATE TABLE IF NOT EXISTS Roles(roleID int, rolename VARCHAR(50), PRIMARY KEY (roleID))`
+        const createRoleStatement = `CREATE TABLE IF NOT EXISTS Roles(roleID int, rolename VARCHAR(50), PRIMARY KEY (roleID))`;
         await connection.execute(createRoleStatement);
         logger.info("Roles table created/exists");
         // .then(logger.info("Role table created/exists")).catch((error) => { logger.error(error) });
@@ -60,7 +62,7 @@ async function initializeUserModel(dbname, reset){
         // .then(logger.info("Role table created/exists")).catch((error) => { logger.error(error) });
     
         // Creating the Users table
-        const createTableStatement = `CREATE TABLE IF NOT EXISTS Users(id int AUTO_INCREMENT, username VARCHAR(15), password varchar(128), roleID int, PRIMARY KEY (id), FOREIGN KEY (roleID) REFERENCES Roles(roleID))`
+        const createTableStatement = `CREATE TABLE IF NOT EXISTS Users(id int AUTO_INCREMENT, username VARCHAR(15), password varchar(128), roleID int, PRIMARY KEY (id), FOREIGN KEY (roleID) REFERENCES Roles(roleID))`;
         await connection.execute(createTableStatement);
         logger.info("Users table created/exists");
         // .then(logger.info("User part table created/exists")).catch((error) => { logger.error(error) });
@@ -86,6 +88,22 @@ async function getConnection(){
 }
 
 //#endregion
+
+/**
+ * Drops the specified table from the database.
+ * @param {*} tableName The name of the table to be dropped.
+ */
+ async function resetTable(tableName){
+    try {
+        const dropQuery = `DROP TABLE IF EXISTS ${tableName}`;
+        await connection.execute(dropQuery);
+        logger.info(`${tableName} table dropped`);
+
+    } catch (error) {
+        logger.error(error);
+        throw new DatabaseConnectionError();
+    }
+}
 
 /**
  * Adds a user to the database with the given username and password.
@@ -179,9 +197,9 @@ async function getRole(username){
  async function userExists(username){
     try {
         const findUser = `SELECT username FROM Users where username = '${username}'`;
-        const [userArray, fields] = await connection.query(findUser);
+        const [rows, fields] = await connection.query(findUser);
 
-        if (userArray.length != 0){
+        if (rows.length != 0){
             logger.info(`User ${username} EXISTS in the database`);  
             return true;
         }
@@ -212,12 +230,14 @@ async function validateLogin(username, password){
 
 //#endregion
 
+//#region Errors
 
 /**
  * Error representing a user login error.
  */
 class UserLoginError extends Error {}
 
+//#endregion
 
 module.exports = {
     UserLoginError,
