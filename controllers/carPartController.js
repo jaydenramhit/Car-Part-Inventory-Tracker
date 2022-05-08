@@ -22,18 +22,18 @@ async function createPart(request, response){
     // If the image is not a valid url, set image to null
     if (!validUtils.isURL(image)){
         image = null;
-        logger.info("Set image to null -- createPart");
+        logger.info("Setting image to null -- createPart");
     }
     
     // If the condition is not valid, set the condition to 'unknown'
     if (validUtils.stringIsEmpty(condition)){
         condition = "unknown";
-        logger.info("Set condition to 'unknown' -- createPart");
+        logger.info("Setting condition to 'unknown' -- createPart");
     }
         
     try {
         await sqlModel.addCarPart(number, partName, condition, image);
-        logger.info(`Created car part (Part #${number}, ${partName}, Condition: ${condition}) -- createPart`);
+        logger.info(`CREATED car part (Part #${number}, ${partName}, Condition: ${condition}) -- createPart`);
 
         response.status(201).render('home.hbs', {message: `Created part: Part #${number}, ${partName}, Condition: ${condition}`});
 
@@ -167,7 +167,7 @@ async function updatePartName(request, response){
 
         // If the car part doesn't exist in the database
         if (!await sqlModel.verifyCarPartExists(partNumber)){
-            logger.info(`NOT UPDATED car part ${partNumber} in database -- updatePartName`);
+            logger.info(`NOT UPDATED car part ${partNumber} because car part DOESN'T exist -- updatePartName`);
             response.status(404).render('home.hbs', {message:`Could not find part #${partNumber}`});
         }
         else{
@@ -212,7 +212,7 @@ async function deletePart(request, response){
         if (await sqlModel.verifyCarPartExists(partNumber)){
             await sqlModel.deleteCarPart(partNumber)
                 .then(part => {
-                    logger.info(`DELETING car part ${partNumber} in database -- deletePart`);
+                    logger.info(`DELETING car part ${partNumber} because car part DOESN'T exist -- deletePart`);
                     response.status(202).render('home.hbs', {message: `Deleted part with part number ${part.partNumber}`});
                 })
         }
