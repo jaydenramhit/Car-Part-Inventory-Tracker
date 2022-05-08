@@ -1,5 +1,8 @@
 * 
 {
+    padding:0;
+    margin:0;
+    box-sizing: border-box;
     font-family: 'Montserrat', sans-serif;
 }
 body { 
@@ -41,4 +44,49 @@ footer {
     display: block;
     margin-left: auto;
     margin-right: auto;
+}
+
+/* #region loginsignup.hbs */
+
+#form-container{
+    display:flex;
+   justify-content: center;
+   align-items: center;
+   flex-direction: column;
+   width: 100%;
+}
+
+
+#form-loginsignup > *{
+    margin-top:1.5rem;
+}
+
+.form-label{
+    margin-bottom: 5px;
+
+}
+.submit-btn{
+    margin-top: 0.5rem;
+}
+input::placeholder{
+    font-size: 14px;
+}
+.form-control{
+    border: 1.25px solid darkgray;
+}
+#line-break-form{
+    width: 100%;
+    color: black;
+    height: 2px;
+    z-index: 999;
+}
+
+/* #endregion */
+
+label{
+    text-align:start;
+}
+legend{
+    text-align: center;
+    margin-bottom:1.25em;
 }
