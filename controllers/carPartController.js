@@ -1,7 +1,10 @@
+'use strict';
+
 const express = require('express');
 const router = express.Router();
 const routeRoot = '/';
 const sqlModel = require('../models/carPartModelMysql.js');
+const validUtils = require('../validateUtils.js');
 
 /**
  * POST controller method that allows the user to create parts via the request body
@@ -11,15 +14,24 @@ const sqlModel = require('../models/carPartModelMysql.js');
 async function createPart(request, response){
     let number = request.body.partNumber;
     let partName = request.body.name;
+    let image = request.body.image;
+    let condition = request.body.condition;
+
+    if (!validUtils.isURL(image))
+        image = null;
+    
+    if (validUtils.stringIsEmpty(condition))
+        condition = "unknown";
+        
     try {
-        await sqlModel.addCarPart(number, partName)
-        response.status(201).render('home.hbs', {message: `Created part: Part #${number}, ${partName}`})
+        await sqlModel.addCarPart(number, partName, image, condition)
+        response.status(201).render('home.hbs', {message: `Created part: Part #${number}, ${partName}, Condition: ${condition}`})
     } catch(error) {
             if (error instanceof sqlModel.DatabaseConnectionError){
                 response.status(500).render('home.hbs', {message: "Error connecting to database."});
             }
             else if (error instanceof sqlModel.InvalidInputError)
-                response.status(404).render('home.hbs', {message: "Invalid input, check that all fields are alpha numeric where applicable."});
+                response.status(404).render('home.hbs', {message: "Invalid input, check that all fields are alpha numeric where applicable. Ensure the url is a valid image url"});
             else {
                 response.status(500).render('error.hbs', {message: `Unexpected error while trying to add part: ${error.message}`});
             }
@@ -67,6 +79,10 @@ async function getAllCarParts(request, response){
             if (part.length == 0)
                 response.status(404).render('home.hbs', {message: "No results"})
             else{
+                for (let i = 0; i < part.length; i++){
+                      if (part[i].image == 'null' || part[i].image == null || part[i.image == ''])
+                        delete part[i].image;
+                  }
                 let output = {part, showList: true}
                 response.status(200).render('home.hbs', output)
             }  

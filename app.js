@@ -1,3 +1,5 @@
+'use strict';
+
 const express = require('express');
 const app = express();
 const {engine} = require('express-handlebars');
@@ -5,6 +7,9 @@ const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const logger = require('./logger');
 const pinohttp = require('pino-http');
+var cookies = require("cookie-parser");
+
+app.use(cookies());
 
 app.engine('hbs', engine({ extname: '.hbs'}));
 app.set('view engine', 'hbs');
@@ -21,7 +26,7 @@ const httpLogger = pinohttp({
 app.use(httpLogger);
 
 // Make sure errorController is last!
-const controllers = ['homeController', 'aboutController', 'carPartController', 'registrationController', 'errorController'] 
+const controllers = ['homeController', 'aboutController', 'carPartController', 'registrationController', 'loginController', 'errorController'] 
 
 app.use(express.json());
 
