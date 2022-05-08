@@ -103,7 +103,7 @@ async function createUser(request, response){
         })
     }
     catch (error){
-         // If the error is an instance of the DatabaseConnectionError error
+        // If the error is an instance of the DatabaseConnectionError error
         if (error instanceof DatabaseConnectionError){
             response.status(404).render('users.hbs', {alertMessage: "Error while connecting to database."})
         }
