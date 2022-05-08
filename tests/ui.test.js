@@ -24,7 +24,7 @@ const home = "http://localhost:1339/"; // or /home depending on your endpoint
 
 
 beforeEach(async()=> {
-    jest.setTimeout(500000)
+    jest.setTimeout(5000)
     await model.initialize(dbName, true);
     // load home page and wait until it is fully loaded
     await page.goto(home, {waitUntil: "domcontentloaded"});

@@ -21,7 +21,22 @@ function isPartNumber(partNumber){
         return false;
 }
 
+// https://thispointer.com/javascript-check-if-string-is-url/
+function isURL(string) {
+    const matchpattern = /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/gm;
+    return matchpattern.test(string);
+  }
+
+function stringIsEmpty(string){
+    if (string == "")
+        return true;
+    else
+        return false;
+}
+
 module.exports = {
     isValid,
-    isPartNumber
+    isPartNumber,
+    isURL,
+    stringIsEmpty
 }
