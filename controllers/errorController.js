@@ -1,6 +1,9 @@
+'use strict';
+
 const express = require('express');
 const router = express.Router();
 const routeRoot = '/';
+const logger = require('../logger');
 
 /**
  * Renders the home page with the given error data.
@@ -9,6 +12,7 @@ const routeRoot = '/';
  */
 function sendError(request, response){
     response.status(404);
+    logger.info(`RENDERING home page WITH Invalid URL ERROR -- sendError`);
     response.render('home.hbs', {alertMessage: 'Invalid URL entered.  Please try again.'});
 }
 

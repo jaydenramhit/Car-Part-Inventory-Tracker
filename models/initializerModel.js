@@ -1,3 +1,5 @@
+'use strict';
+
 const model = require('./carPartModelMysql.js');
 const users = require('./userModel')
 
@@ -16,5 +18,6 @@ function initialize(dbname, reset, app, port){
         // Then listen to the port
         .then(app.listen(port));
 }
+
 
 module.exports = {initialize};

@@ -1,9 +1,12 @@
+'use strict';
+
 const express = require('express');
 const { DatabaseConnectionError } = require('../models/carPartModelMysql');
 const router = express.Router();
 const routeRoot = '/';
 const userModel = require('../models/userModel');
 const uuid = require('uuid');
+const logger = require('../logger');
 const sessions = {};
 
 /**
@@ -11,13 +14,16 @@ const sessions = {};
  * @param {*} request 
  * @param {*} response 
  */
- async function loginUser(request, response){
+
+async function loginUser(request, response){
+    // Getting the values
     let username = request.body.username;
     let password = request.body.password;
 
     try {
         let result = await userModel.validateLogin(username, password);
 
+        // If the validation is successful
         if (result === true){
             // Create a session object that will expire in 2 minutes
             const sessionId = createSession(username, 2);
@@ -27,6 +33,7 @@ const sessions = {};
             response.cookie("userRole", await userModel.getRole(username));
             response.cookie("username", username);
             
+            logger.info(`LOGGED IN user ${username} -- loginUser`);
             // Render the home page
             response.status(201).render('home.hbs', {successMessage: `${username} has successfully logged in!`});
         }
@@ -46,6 +53,7 @@ const sessions = {};
                 dontHaveAccountText: "Don't have an account?"
             }
 
+            logger.info(`DID NOT LOG IN user ${username} because of validation failure -- loginUser`);
             response.status(404).render('loginsignup.hbs', errorData);
         }
             
@@ -69,17 +77,18 @@ const sessions = {};
         // If the error is an instance of the DatabaseConnectionError error
         if (error instanceof DatabaseConnectionError){
             errorData.alertMessage = "Error while connecting to database.";
-
-            response.status(500).render('loginsignup.hbs', errorData);
+            logger.error(`DatabaseConnectionError when LOGGING IN user ${username} -- loginUser`);
+            response.status(500).render('loginsignup.hbs', {alertMessage: "Error while connecting to database."});
         }
         // If the error is an instance of the UserLoginError error
         else if (error instanceof userModel.UserLoginError){
-           errorData.alertMessage = error.message;
-
+            errorData.alertMessage = error.message;
+            logger.error(`UserLoginError when LOGGING IN user ${username} -- loginUser`);
             response.status(404).render('loginsignup.hbs', errorData);
         }
         // If any other error occurs
         else {
+            logger.error(`OTHER error when LOGGING IN user ${username} -- loginUser`);
             response.status(500).render('error.hbs', {message: `Unexpected error while trying to register user: ${error.message}`});
         }
     }
@@ -98,6 +107,8 @@ async function logoutUser(request, response){
     response.cookie("sessionId", "", { expires: new Date() }); // "erase" cookie by forcing it to expire.
     response.redirect('/');
 
+    logger.info(`SHOWING LOGIN information (login page) -- showLogin`);
+    response.status(201).render('loginsignup.hbs', pageData);
 }
 
 class Session {
@@ -109,13 +120,15 @@ class Session {
     constructor(username, expiresAt) {
         this.username = username
         this.expiresAt = expiresAt
+
+        logger.info(`SESSION constructor for username ${username} with expiry date ${expiresAt}`);
     }
 
     /**
      * True if the session has expired; otherwise false.
      */
     isExpired() {
-        this.expiresAt < (new Date())
+        this.expiresAt < (new Date());
     }
 }
 
@@ -135,6 +148,8 @@ function createSession(username, numMinutes) {
     const thisSession = new Session(username, expiresAt);
     // Add the session information to the sessions map, using sessionId as the key
     sessions[sessionId] = thisSession;
+
+    logger.info(`CREATED SESSION for username ${username} with expiry date ${expiresAt}`);
 
     return sessionId;
 }
