@@ -32,10 +32,12 @@ async function loginUser(request, response){
             response.cookie("userRole", await userModel.getRole(username));
             response.cookie("username", username);
             
-            logger.info(`LOGGED IN user ${username} -- loginUser`);
-
             const pageData = {
-                successMessage: `${username} has successfully logged in!`,
+                alertOccurred: true,
+                alertMessage: `${username} has successfully logged in!`,
+                alertLevel: 'success',
+                alertLevelText: 'Success',
+                alertHref: 'check-circle-fill',
                 display_signup: "none",
                 display_login: "block",
                 logInlogOutText: "Log Out",
@@ -43,6 +45,7 @@ async function loginUser(request, response){
                 loggedInUser: username
             }
 
+            logger.info(`LOGGED IN user ${username} -- loginUser`);
             // Render the home page
             response.status(201).render('home.hbs', pageData);
         }
@@ -173,7 +176,11 @@ async function showLogin(request, response) {
         showConfirmPassword: false,
         oppositeFormAction: 'signup',
         oppositeFormName: 'Sign up',
-        dontHaveAccountText: "Don't have an account?"
+        dontHaveAccountText: "Don't have an account?",
+        display_signup: "block",
+        display_login: "block",
+        logInlogOutText: "Log In",
+        endpointLogInLogOut: "login"
     }
 
     response.status(201).render('loginsignup.hbs', pageData);

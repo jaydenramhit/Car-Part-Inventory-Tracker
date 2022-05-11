@@ -22,8 +22,8 @@ function sendHome(request, response) {
         logger.info(`COOKIE CREATED for user ${username}, rendering home page -- sendHome`);
 
         const pageData = {
-            display_signup: "contents",
-            display_login: "contents",
+            display_signup: "block",
+            display_login: "block",
             logInlogOutText: "Log In",
             endpointLogInLogOut: "login"
         }
@@ -32,8 +32,15 @@ function sendHome(request, response) {
         // response.cookie ('justRegistered', 'false');
     }
     else {
+        const pageData = {
+            display_signup: "block",
+            display_login: "block",
+            logInlogOutText: "Log In",
+            endpointLogInLogOut: "login"
+        }
+
         logger.info(`RENDERING home page -- sendHome`);
-        response.status(200).render('home.hbs');
+        response.status(200).render('home.hbs', pageData);
     }     
 }
 

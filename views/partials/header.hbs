@@ -24,11 +24,11 @@
         <li class="nav-right" style="display: flex; flex-direction: row; 
         align-items: center; margin-right: 0.75rem; font-size: 16px;">{{loggedInUser}}</li>
       {{/if}}
-      <li class="nav-right">
-        <a class="nav-link" href="/users/{{endpointLogInLogOut}}" id="login-nav" style="display:{{display_login}};">{{logInlogOutText}}</a>
+      <li class="nav-right" style="display:{{display_login}};">
+        <a class="nav-link" href="/users/{{endpointLogInLogOut}}">{{logInlogOutText}}</a>
       </li>
-      <li class="nav-right">
-        <a class="nav-link" href="/users/signup" id="signup-nav" style="display:{{display_signup}};">Sign Up</a>
+      <li class="nav-right" style="display:{{display_signup}}">
+        <a class="nav-link" href="/users/signup">Sign Up</a>
       </li>
     </ul>
   </div>
