@@ -14,7 +14,6 @@ const sessions = {};
  * @param {*} request 
  * @param {*} response 
  */
-
 async function loginUser(request, response){
     // Getting the values
     let username = request.body.username;
@@ -34,8 +33,18 @@ async function loginUser(request, response){
             response.cookie("username", username);
             
             logger.info(`LOGGED IN user ${username} -- loginUser`);
+
+            const pageData = {
+                successMessage: `${username} has successfully logged in!`,
+                display_signup: "none",
+                display_login: "block",
+                logInlogOutText: "Log Out",
+                endpointLogInLogOut: "login",
+                loggedInUser: username
+            }
+
             // Render the home page
-            response.status(201).render('home.hbs', {successMessage: `${username} has successfully logged in!`});
+            response.status(201).render('home.hbs', pageData);
         }
         else{
             // Error data for when an error occurs

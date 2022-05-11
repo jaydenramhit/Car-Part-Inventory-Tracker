@@ -20,7 +20,15 @@ function sendHome(request, response) {
         const username = request.cookies.username;
         response.cookie ('justRegistered', 'false');
         logger.info(`COOKIE CREATED for user ${username}, rendering home page -- sendHome`);
-        response.status(200).render('home.hbs', {successMessage: `Congrats ${username} you have been registered!`});
+
+        const pageData = {
+            display_signup: "contents",
+            display_login: "contents",
+            logInlogOutText: "Log In",
+            endpointLogInLogOut: "login"
+        }
+
+        response.status(200).render('home.hbs', pageData);
         // response.cookie ('justRegistered', 'false');
     }
     else {
@@ -103,7 +111,11 @@ function showListOneForm(response) {
         method: "GET",          
         methodOverride:"GET",       
         legend:"Please enter the part number to display: ",
-        formfields: [{field:"partNumber", pretty:"Original Part Number", type: "number"}]
+        formfields: [{field:"partNumber", pretty:"Original Part Number", type: "number"}],
+        display_signup: "block",
+        display_login: "block",
+        logInlogOutText: "Log In",
+        endpointLogInLogOut: "login"
     };
 
     logger.info(`RENDERING home page WITH FIND form -- showListOneForm`);
@@ -123,7 +135,11 @@ function showEditForm(response) {
         methodOverride:"PUT",       
         legend:"Please enter the new part name for the part that should to be changed: ",
         formfields: [{field:"partNumber", pretty:"Original Part Number", type: "number"}, 
-                     {field:"name", pretty:"New Part Name"}]
+                     {field:"name", pretty:"New Part Name"}],
+        display_signup: "block",
+        display_login: "block",
+        logInlogOutText: "Log In",
+        endpointLogInLogOut: "login"
     };
 
     logger.info(`RENDERING home page WITH UPDATE form -- showEditForm`);
@@ -142,7 +158,11 @@ function showDeleteForm(response) {
         method: "post",          
         methodOverride:"DELETE",       
         legend:"Please enter the part number of the part that should be deleted:",
-        formfields: [{field:"partNumber", pretty:"Part Number", type: "number"}]
+        formfields: [{field:"partNumber", pretty:"Part Number", type: "number"}],
+        display_signup: "block",
+        display_login: "block",
+        logInlogOutText: "Log In",
+        endpointLogInLogOut: "login"
     };
 
     logger.info(`RENDERING home page WITH DELETE form -- showDeleteForm`);
