@@ -79,7 +79,7 @@ async function createUser(request, response){
             else if (error instanceof userModel.UserLoginError){
                 errorData.alertMessage = error.message;
                 logger.error(`UserLoginError when CREATING user ${username} -- createUser`);
-                response.status(404).render('users.hbs', errorData);
+                response.status(404).render('loginsignup.hbs', errorData);
             }
             // If any other error occurs
             else {
