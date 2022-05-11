@@ -13,9 +13,11 @@
       <li class="nav-item active">
         <a class="nav-link" href="/">Home</a>
       </li>
+      {{#if loggedInUser}}
       <li class="nav-item active">
         <a class="nav-link" href="/projects" id="projects-nav">Projects</a>
       </li>
+      {{/if}}
     </ul>
     <ul class="navbar-nav">
       {{#if loggedInUser}}
