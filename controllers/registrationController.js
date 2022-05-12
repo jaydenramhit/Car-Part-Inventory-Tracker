@@ -49,8 +49,22 @@ async function createUser(request, response){
                 // .redirect('/')// Need cookie or session to pass this message to /
 
             logger.info(`CREATED user ${username} in database -- createUser`);
+
+            const pageData = {
+                alertOccurred: true,
+                alertMessage: `Congrats ${username} you have been registered!`,
+                alertLevel: 'success',
+                alertLevelText: 'Success',
+                alertHref: 'check-circle-fill',
+                display_signup: "none",
+                display_login: "block",
+                logInlogOutText: "Log Out",
+                endpointLogInLogOut: "login",
+                loggedInUser: username
+            }
+
             // Render the home page
-            response.status(201).render('home.hbs', {successMessage: `Congrats ${username} you have been registered!`}) // Need cookie or session to pass this message to /
+            response.status(201).render('home.hbs', pageData) // Need cookie or session to pass this message to /
 
         } catch(error) {
 
@@ -79,7 +93,7 @@ async function createUser(request, response){
             else if (error instanceof userModel.UserLoginError){
                 errorData.alertMessage = error.message;
                 logger.error(`UserLoginError when CREATING user ${username} -- createUser`);
-                response.status(404).render('users.hbs', errorData);
+                response.status(404).render('loginsignup.hbs', errorData);
             }
             // If any other error occurs
             else {
@@ -140,7 +154,11 @@ async function showSignup(request, response){
         showConfirmPassword: true,
         oppositeFormAction: 'login',
         oppositeFormName: 'Log in',
-        dontHaveAccountText: "Already have an account?"
+        dontHaveAccountText: "Already have an account?",
+        display_signup: "block",
+        display_login: "block",
+        logInlogOutText: "Log In",
+        endpointLogInLogOut: "login"
     }
 
     logger.info(`SHOWING SIGNUP information (signup page) -- showSignup`);
