@@ -64,10 +64,14 @@ async function initializeUserModel(dbname, reset){
         // .then(logger.info("Role table created/exists")).catch((error) => { logger.error(error) });
     
         // Creating the Users table
-        const createTableStatement = `CREATE TABLE IF NOT EXISTS Users(id int AUTO_INCREMENT, username VARCHAR(15), password varchar(128), roleID int, PRIMARY KEY (id), FOREIGN KEY (roleID) REFERENCES Roles(roleID))`;
+        let createTableStatement = `CREATE TABLE IF NOT EXISTS Users(id int AUTO_INCREMENT, username VARCHAR(15), password varchar(128), roleID int, PRIMARY KEY (id), FOREIGN KEY (roleID) REFERENCES Roles(roleID))`;
         await connection.execute(createTableStatement);
         logger.info("Users table created/exists");
         // .then(logger.info("User part table created/exists")).catch((error) => { logger.error(error) });
+        
+        createTableStatement = 'CREATE TABLE IF NOT EXISTS UsersProject(projectId int, id int,  FOREIGN KEY (id) REFERENCES Users(id), FOREIGN KEY (projectId) REFERENCES Project(projectId), PRIMARY KEY (projectId, id))';
+        await connection.execute(createTableStatement);
+        logger.info("UsersProject table created/exists");
 
         return connection;
     
@@ -77,6 +81,48 @@ async function initializeUserModel(dbname, reset){
     }
 }
 
+//#endregion
+
+//#region Project operations
+/**
+ * Associates a user with a project
+ * @param {*} projectId 
+ * @param {*} partNumber 
+ */
+ async function addUserToProject(projectId, id){
+    if(projectExists(projectId)){
+        try {
+            const insertStatement = `INSERT INTO UsersProject (projectId, id) values (${projectId}, ${id})`;
+            await connection.execute(insertStatement);
+        }    
+        catch (error) {
+            logger.error(error);
+            throw new DatabaseConnectionError();
+        }
+    }
+    else
+        throw new DatabaseConnectionError();
+        
+}
+/**
+ * A helper method that determines if a project exists or not
+ * @param {*} projectId 
+ * @returns true if project exists, false otherwise
+ */
+async function projectExists(projectId){
+    try {
+        const selectStatement = `SELECT projectId from Project where projectId = ${projectId}`;
+        let projectArray = await connection.query(selectStatement);
+        if (projectArray[0].length != 0)
+            return true;
+        return false;
+    }
+    catch (error) {
+        logger.error(error);
+        throw new DatabaseConnectionError();
+    }
+
+}
 //#endregion
 
 //#region Connection
@@ -110,7 +156,11 @@ async function getConnection(){
 }
 
 //#endregion
-
+async function getUserByName(username){
+    let query = `SELECT id from Users where username = '${username}'`;
+    let result = await connection.query(query);
+    return result[0][0].id;
+}
 /**
  * Adds a user to the database with the given username and password.
  * @param {string} username The username of the user.
@@ -253,5 +303,7 @@ module.exports = {
     addUser,
     showAllUsers,
     validateLogin,
-    getRole
+    getRole,
+    addUserToProject,
+    getUserByName
 }

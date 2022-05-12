@@ -12,9 +12,9 @@ const users = require('./userModel')
  */
 function initialize(dbname, reset, app, port){
     // Initialize the model
-    model.initialize(dbname, reset)
+    users.initializeUserModel(dbname, reset)
         // Then initialize the model for the users
-        .then(users.initializeUserModel(dbname, reset))
+        .then(model.initialize(dbname, reset))
         // Then listen to the port
         .then(app.listen(port));
 }
