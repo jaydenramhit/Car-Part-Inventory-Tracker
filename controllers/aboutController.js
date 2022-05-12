@@ -11,8 +11,15 @@ const logger = require('../logger');
  * @param {*} response 
  */
 function showAbout(request, response) {
+    const pageData = {
+        display_signup: "block",
+        display_login: "block",
+        logInlogOutText: "Log In",
+        endpointLogInLogOut: "login"
+    }
+
     logger.info(`RENDERING about page -- showAbout`);
-    response.status(200).render('about.hbs');
+    response.status(200).render('about.hbs', pageData);
 }
 
 router.get('/about', showAbout);
