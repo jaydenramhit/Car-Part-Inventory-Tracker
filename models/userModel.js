@@ -68,11 +68,6 @@ async function initializeUserModel(dbname, reset){
         await connection.execute(createTableStatement);
         logger.info("Users table created/exists");
         // .then(logger.info("User part table created/exists")).catch((error) => { logger.error(error) });
-        
-        createTableStatement = 'CREATE TABLE IF NOT EXISTS UsersProject(projectId int, id int,  FOREIGN KEY (id) REFERENCES Users(id), FOREIGN KEY (projectId) REFERENCES Project(projectId), PRIMARY KEY (projectId, id))';
-        await connection.execute(createTableStatement);
-        logger.info("UsersProject table created/exists");
-
         return connection;
     
     } catch (err) {
@@ -83,46 +78,7 @@ async function initializeUserModel(dbname, reset){
 
 //#endregion
 
-//#region Project operations
-/**
- * Associates a user with a project
- * @param {*} projectId 
- * @param {*} partNumber 
- */
- async function addUserToProject(projectId, id){
-    if(projectExists(projectId)){
-        try {
-            const insertStatement = `INSERT INTO UsersProject (projectId, id) values (${projectId}, ${id})`;
-            await connection.execute(insertStatement);
-        }    
-        catch (error) {
-            logger.error(error);
-            throw new DatabaseConnectionError();
-        }
-    }
-    else
-        throw new DatabaseConnectionError();
-        
-}
-/**
- * A helper method that determines if a project exists or not
- * @param {*} projectId 
- * @returns true if project exists, false otherwise
- */
-async function projectExists(projectId){
-    try {
-        const selectStatement = `SELECT projectId from Project where projectId = ${projectId}`;
-        let projectArray = await connection.query(selectStatement);
-        if (projectArray[0].length != 0)
-            return true;
-        return false;
-    }
-    catch (error) {
-        logger.error(error);
-        throw new DatabaseConnectionError();
-    }
 
-}
 //#endregion
 
 //#region Connection
@@ -304,6 +260,5 @@ module.exports = {
     showAllUsers,
     validateLogin,
     getRole,
-    addUserToProject,
     getUserByName
 }

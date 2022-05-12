@@ -37,14 +37,6 @@ async function initialize(dbname, reset){
         await connection.execute(createTableStatement);
         logger.info("Car part table created/exists");
 
-        createTableStatement = 'CREATE TABLE IF NOT EXISTS Project(projectId int AUTO_INCREMENT, name VARCHAR(50), description VARCHAR(255), PRIMARY KEY (projectId))';
-        await connection.execute(createTableStatement);
-        logger.info("Project table created/exists");
-
-        createTableStatement = 'CREATE TABLE IF NOT EXISTS PartProject(projectId int, partNumber int,  FOREIGN KEY (partNumber) REFERENCES carPart(partNumber), FOREIGN KEY (projectId) REFERENCES Project(projectId), PRIMARY KEY (projectId, partNumber))';
-        await connection.execute(createTableStatement);
-        logger.info("PartProject table created/exists");
-        
         return connection
     }
     catch (error){
@@ -89,69 +81,7 @@ async function resetTable(){
 
 //#region Project operations
 
-/**
- * Method used to add a project
- * @param {*} name 
- * @param {*} description 
- * @returns The id of the project that was just created
- */
-async function addProject(name, description){
-    try {
-        const insertStatement = `INSERT INTO Project (name, description) values ('${name}', '${description}')`;
-        let projectId = await connection.execute(insertStatement);
-        return projectId[0].insertId;
-    }    
-    catch (error) {
-        logger.error(error);
-        throw new DatabaseConnectionError();
-    }
-}
 
-async function getAllProjects(username){
-    let userId = await userModel.getUserByName(username);
-    let query = `SELECT name, description FROM Project, UsersProject as U where U.id = ${userId}`;
-    let results = await connection.query(query);
-    return results[0];
-}
-/**
- * Associates a part with a project
- * @param {*} projectId 
- * @param {*} partNumber 
- */
-async function addPartToProject(projectId, partNumber){
-    if(projectExists(projectId)){
-        try {
-            const insertStatement = `INSERT INTO PartProject (projectId, partNumber) values (${projectId, partNumber})`;
-            await connection.execute(insertStatement);
-        }    
-        catch (error) {
-            logger.error(error);
-            throw new DatabaseConnectionError();
-        }
-    }
-    else
-        throw new DatabaseConnectionError();
-        
-}
-/**
- * A helper method that determines if a project exists or not
- * @param {*} projectId 
- * @returns true if project exists, false otherwise
- */
-async function projectExists(projectId){
-    try {
-        const selectStatement = `SELECT projectId from Project where projectId = ${projectId}`;
-        let projectArray = await connection.query(selectStatement);
-        if (projectArray[0].length != 0)
-            return true;
-        return false;
-    }
-    catch (error) {
-        logger.error(error);
-        throw new DatabaseConnectionError();
-    }
-
-}
 //#endregion
 
 //#region CRUD operations
@@ -359,9 +289,6 @@ module.exports = {
     findAllCarParts,
     verifyCarPartExists,
     checkConnection,
-    addPartToProject,
-    addProject,
-    getAllProjects,
     DatabaseConnectionError,
     InvalidInputError
 }

@@ -1,7 +1,8 @@
 'use strict';
 
-const model = require('./carPartModelMysql.js');
+const model = require('./carPartModelMysql');
 const users = require('./userModel')
+const projects = require('./projectModel');
 
 /**
  * Initializes the model and user model.
@@ -15,6 +16,7 @@ function initialize(dbname, reset, app, port){
     users.initializeUserModel(dbname, reset)
         // Then initialize the model for the users
         .then(model.initialize(dbname, reset))
+        .then(projects.initializeProjectModel(dbname, reset))
         // Then listen to the port
         .then(app.listen(port));
 }

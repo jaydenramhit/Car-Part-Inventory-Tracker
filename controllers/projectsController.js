@@ -19,8 +19,8 @@ const projectModel = require('../models/projectModel');
     let description = request.body.description;
     let userId = await usersModel.getUserByName(request.cookies.username);
     try {
-        let projectId = await partsModel.addProject(name, description)
-        await usersModel.addUserToProject(projectId, userId);
+        let projectId = await projectModel.addProject(name, description)
+        await projectModel.addUserToProject(projectId, userId);
         const pageData = {
             alertOccurred: true,
             alertMessage: "You have successfully added a project!",
@@ -73,7 +73,7 @@ const projectModel = require('../models/projectModel');
         tableMessage: "You do not have any projects.",
         titleName: 'Create a Project',
         pathNameForActionForm: 'projects',
-        projects: await partsModel.getAllProjects(request.cookies.username)
+        projects: await projectModel.getAllProjects(request.cookies.username)
     }
     if (pageData.projects.length == 0)
         pageData.showTable = false;
