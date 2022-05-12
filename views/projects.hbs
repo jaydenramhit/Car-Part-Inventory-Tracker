@@ -19,25 +19,34 @@
         <div>{{alertMessage}}</div>
     </div>
 {{/if}}
-{{#if showTable}}
-<table>
-    <tr>
-        <th>Name</th>
-        <th>Description</th>
-    </tr>
 
-    <!--Formatting table for each car part-->
-    {{#each projects}}
-    <tr>
-        <td>{{name}}</td>
-        <td>{{description}}</td>
-    </tr>
-    {{/each}}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        {{#if showTable}}
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+            </tr>
 
-</table>
-{{else}}
-<h2>{{tableMessage}}</h2>
-{{/if}}
+            <!--Formatting table for each car part-->
+            {{#each projects}}
+            <tr>
+                <td>{{name}}</td>
+                <td>{{description}}</td>
+            </tr>
+            {{/each}}
+
+        </table>
+        {{else}}
+        <h2>{{tableMessage}}</h2>
+        <h3>What are Projects?</h3>
+        <p>Projects allow you to created your own curated list of parts from our inventory! With Projects, you can
+            create any kind of car project you can think of! For example, you can create a Project that contains the
+            parts necessary to create your dream car!</p>
+        {{/if}}
+    </div>
+</div>
 <!--container for form-->
 <section id="form-container">
 

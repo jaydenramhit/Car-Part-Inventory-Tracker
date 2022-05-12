@@ -70,7 +70,7 @@ const projectModel = require('../models/projectModel');
     const pageData = {
         alertOccurred: false,
         showTable: true,
-        tableMessage: "You do not have any projects.",
+        tableMessage: "You do not have any Projects.",
         titleName: 'Create a Project',
         pathNameForActionForm: 'projects',
         projects: await projectModel.getAllProjects(request.cookies.username)
