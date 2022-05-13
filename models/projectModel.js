@@ -5,6 +5,7 @@ const validUtils = require('../validateUtils.js');
 const logger = require('../logger');
 const model = require('../models/carPartModelMysql');
 const userModel = require('../models/userModel');
+const { DatabaseConnectionError } = require('./carPartModelMysql.js');
 var connection;
 connection = model.getConnection();
 /**
@@ -25,11 +26,19 @@ async function initializeProjectModel(dbname, reset){
         })
     
         if (reset) {
-            resetTable("PartProject");
-            resetTable("UsersProject");
-            resetTable("Project");
+            await resetTable("PartProject");
+            await resetTable("UsersProject");
+            await resetTable("Project");
         }
-        let createTableStatement = 'CREATE TABLE IF NOT EXISTS Project(projectId int AUTO_INCREMENT, name VARCHAR(50), description VARCHAR(255), PRIMARY KEY (projectId))';
+        let createTableStatement = `CREATE TABLE IF NOT EXISTS Users(id int AUTO_INCREMENT, username VARCHAR(15), password varchar(128), roleID int, PRIMARY KEY (id), FOREIGN KEY (roleID) REFERENCES Roles(roleID))`;
+        await connection.execute(createTableStatement);
+        logger.info("Users table created/exists");
+
+        createTableStatement = 'CREATE TABLE IF NOT EXISTS carPart(partNumber int, name VARCHAR(100), `condition` VARCHAR(50), image VARCHAR(2000), PRIMARY KEY (partNumber))';
+        await connection.execute(createTableStatement);
+        logger.info("Car part table created/exists");
+
+        createTableStatement = 'CREATE TABLE IF NOT EXISTS Project(projectId int AUTO_INCREMENT, name VARCHAR(50), description VARCHAR(255), PRIMARY KEY (projectId))';
         await connection.execute(createTableStatement);
         logger.info("Project table created/exists");
 
@@ -47,7 +56,7 @@ async function initializeProjectModel(dbname, reset){
     
     } catch (err) {
         logger.error(err);
-        throw new model.DatabaseConnectionError();
+        throw new DatabaseConnectionError();
     }
 }
 
@@ -69,7 +78,7 @@ async function getConnection(){
 
     } catch (error) {
         logger.error(error);
-        throw new model.DatabaseConnectionError();
+        throw new DatabaseConnectionError();
     }
 }
 
@@ -87,7 +96,7 @@ async function getConnection(){
     }    
     catch (error) {
         logger.error(error);
-        throw new model.DatabaseConnectionError();
+        throw new DatabaseConnectionError();
     }
 }
 /**
@@ -114,11 +123,11 @@ async function addPartToProject(projectId, partNumber){
         }    
         catch (error) {
             logger.error(error);
-            throw new model.DatabaseConnectionError();
+            throw new DatabaseConnectionError();
         }
     }
     else
-        throw new model.DatabaseConnectionError();
+        throw new DatabaseConnectionError();
 }     
 //#region Project operations
 /**
@@ -134,11 +143,11 @@ async function addPartToProject(projectId, partNumber){
         }    
         catch (error) {
             logger.error(error);
-            throw new model.DatabaseConnectionError();
+            throw new DatabaseConnectionError();
         }
     }
     else
-        throw new model.DatabaseConnectionError();
+        throw new DatabaseConnectionError();
         
 }
 /**
@@ -156,7 +165,7 @@ async function projectExists(projectId){
     }
     catch (error) {
         logger.error(error);
-        throw new model.DatabaseConnectionError();
+        throw new DatabaseConnectionError();
     }
 
 }

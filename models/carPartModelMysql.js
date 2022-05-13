@@ -29,7 +29,10 @@ async function initialize(dbname, reset){
     
         // Dropping the tables if resetting them
         if (reset){
-            resetTable();
+            resetTable("PartProject");
+            resetTable("UsersProject");
+            resetTable("Project");
+            resetTable("carPart");
         }
 
         // Creating the carPart table
@@ -64,9 +67,9 @@ async function getConnection(){
 /**
  * Drops the carPart table from the database.
  */
-async function resetTable(){
+async function resetTable(table){
     try {
-        const dropQuery = "DROP TABLE IF EXISTS carPart";
+        const dropQuery = `DROP TABLE IF EXISTS ${table}`;
         await connection.execute(dropQuery);
         logger.info("Car part table dropped");
         // .then(logger.info("Car part table dropped")).catch((error) => { logger.error(error) });
