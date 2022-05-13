@@ -8,7 +8,10 @@ app.use(cookieParser())
 
 var connection;
 beforeEach(async () => { connection = await model.initializeProjectModel(dbName, true);});
-
+afterEach(async () => {
+    if (connection)
+        await connection.end();
+})
 const projectData = [
     { name: 'First Project', description: 'Test Description' },
     { name: 'Second Project', description: 'Test Description' },
