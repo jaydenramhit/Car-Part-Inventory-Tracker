@@ -107,7 +107,7 @@ async function addCarPart(partNumber, name, condition, image){
     try {
         const addStatement = 'INSERT INTO carPart(partNumber, name, `condition`' + `, image) values ('${partNumber}', '${name}', '${condition}', '${image}');`;
         await connection.execute(addStatement);
-        logger.info("Successful added car part to the database.");
+        logger.info(`ADDED car part (${partNumber}) to the database.`);
 
         return { "partNumber": partNumber, "name": name, "condition": condition, "image": image };           
     }
@@ -132,7 +132,7 @@ async function findCarPartByNumber(partNumber){
     try {
         const queryStatement = `SELECT * FROM carPart WHERE partNumber= '${partNumber}';`;
         let carPartArray = await connection.query(queryStatement);
-        logger.info("Successful found the car part in the database.");
+        logger.info(`FOUND the car part (${partNumber}) in the database.`);
 
         return carPartArray[0];
     }
@@ -150,7 +150,7 @@ async function findAllCarParts(){
     try {
         const queryStatement = "SELECT partNumber, name, `condition`, image FROM carPart;";
         let carPartArray = await connection.query(queryStatement);
-        logger.info("Successful found ALL the car parts in the database.");
+        logger.info("FOUND ALL the car parts in the database.");
 
         return carPartArray[0];
     }
@@ -176,7 +176,7 @@ async function updateCarPartName(partNumber, name){
     try {
         const addStatement = `UPDATE carPart SET name = '${name}' WHERE partNumber = ${partNumber};`;
         await connection.query(addStatement);
-        logger.info("Successful updated the car part in the database.");
+        logger.info(`UPDATED the car part (${partNumber}) in the database.`);
 
         return { "partNumber": partNumber, "name": name };
     }
@@ -201,7 +201,7 @@ async function updateCarPartName(partNumber, name){
     try {
         const addStatement = `DELETE FROM carPart where partNumber = ${partNumber};`;
         await connection.execute(addStatement);
-        logger.info("Successful deleted the car part from the database.");
+        logger.info(`DELETED the car part (${partNumber}) from the database.`);
 
         return {"partNumber": partNumber }
     }

@@ -13,15 +13,24 @@
       <li class="nav-item active">
         <a class="nav-link" href="/">Home</a>
       </li>
+      {{#if loggedInUser}}
+      <li class="nav-item active">
+        <a class="nav-link" href="/projects" id="projects-nav">Projects</a>
+      </li>
+      {{/if}}
       <li>
         <a class="nav-link" href="/projects">Projects</a>
       </li>
     </ul>
     <ul class="navbar-nav">
-      <li class="nav-right">
-        <a class="nav-link" href="/users/login">Log In</a>
+      {{#if loggedInUser}}
+        <li class="nav-right" style="display: flex; flex-direction: row; 
+        align-items: center; margin-right: 0.75rem; font-size: 16px;">{{loggedInUser}}</li>
+      {{/if}}
+      <li class="nav-right" style="display:{{display_login}};">
+        <a class="nav-link" href="/users/{{endpointLogInLogOut}}">{{logInlogOutText}}</a>
       </li>
-      <li class="nav-right">
+      <li class="nav-right" style="display:{{display_signup}}">
         <a class="nav-link" href="/users/signup">Sign Up</a>
       </li>
     </ul>
