@@ -3,6 +3,7 @@
 const mysql = require('mysql2/promise');
 const validUtils = require('../validateUtils.js');
 const logger = require('../logger');
+const userModel = require('../models/userModel');
 var connection;
 
 // docker run -p 10000:3306 --name carPartSqlDb -e MYSQL_ROOT_PASSWORD=pass -e MYSQL_DATABASE=carPart_db -d mysql:5.7
@@ -28,11 +29,14 @@ async function initialize(dbname, reset){
     
         // Dropping the tables if resetting them
         if (reset){
-            resetTable();
+            resetTable("PartProject");
+            resetTable("UsersProject");
+            resetTable("Project");
+            resetTable("carPart");
         }
 
         // Creating the carPart table
-        const createTableStatement = 'CREATE TABLE IF NOT EXISTS carPart(partNumber int, name VARCHAR(100), `condition` VARCHAR(50), image VARCHAR(2000), PRIMARY KEY (partNumber))';
+        let createTableStatement = 'CREATE TABLE IF NOT EXISTS carPart(partNumber int, name VARCHAR(100), `condition` VARCHAR(50), image VARCHAR(2000), PRIMARY KEY (partNumber))';
         await connection.execute(createTableStatement);
         logger.info("Car part table created/exists");
 
@@ -63,9 +67,9 @@ async function getConnection(){
 /**
  * Drops the carPart table from the database.
  */
-async function resetTable(){
+async function resetTable(table){
     try {
-        const dropQuery = "DROP TABLE IF EXISTS carPart";
+        const dropQuery = `DROP TABLE IF EXISTS ${table}`;
         await connection.execute(dropQuery);
         logger.info("Car part table dropped");
         // .then(logger.info("Car part table dropped")).catch((error) => { logger.error(error) });
@@ -75,6 +79,11 @@ async function resetTable(){
         throw new DatabaseConnectionError();
     }
 }
+
+//#endregion
+
+//#region Project operations
+
 
 //#endregion
 
