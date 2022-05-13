@@ -8,7 +8,7 @@ const validUtils = require('../validateUtils.js');
 const partsModel = require('../models/carPartModelMysql');
 const usersModel = require('../models/userModel');
 const projectModel = require('../models/projectModel');
-
+;
 /**
  * POST controller method that allows the user to create projects
  * @param {*} request 
@@ -18,7 +18,11 @@ const projectModel = require('../models/projectModel');
     let name = request.body.name;
     let description = request.body.description;
     let userId = await usersModel.getUserByName(request.cookies.username);
+   
+
     try {
+        if (userId == -1)
+            throw new sqlModel.DatabaseConnectionError("The project is not associated with a user");
         let projectId = await projectModel.addProject(name, description)
         await projectModel.addUserToProject(projectId, userId);
         const pageData = {

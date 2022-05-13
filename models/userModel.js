@@ -116,6 +116,8 @@ async function getConnection(){
 
 //#endregion
 async function getUserByName(username){
+    if (username == undefined || username == null || username.length == 0)
+        return -1;
     let query = `SELECT id from Users where username = '${username}'`;
     let result = await connection.query(query);
     return result[0][0].id;

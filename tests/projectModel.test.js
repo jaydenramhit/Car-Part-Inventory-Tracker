@@ -6,7 +6,6 @@ const initializer = require('../models/initializerModel')
 
 var connection;
 
-/* Data to be used to generate random pokemon for testing */
 const projectData = [
     { name: 'First Project', description: 'Test Description' },
     { name: 'Second Project', description: 'Test Description' },
