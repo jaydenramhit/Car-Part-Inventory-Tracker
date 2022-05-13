@@ -5,9 +5,8 @@ const { DatabaseConnectionError } = require('../models/carPartModelMysql');
 const router = express.Router();
 const routeRoot = '/';
 const userModel = require('../models/userModel');
-const uuid = require('uuid');
 const logger = require('../logger');
-const sessions = {};
+const session = require('../models/sessionModel');
 
 /**
  * Handles the request for logging in a user and forms the appropriate response.
@@ -25,10 +24,10 @@ async function loginUser(request, response){
         // If the validation is successful
         if (result === true){
             // Create a session object that will expire in 2 minutes
-            const sessionId = createSession(username, 2);
+            const sessionId = session.createSession(username, 2);
 
             // Save cookie that will expire.
-            response.cookie("sessionId", sessionId, { expires: sessions[sessionId].expiresAt }); 
+            response.cookie("sessionId", sessionId, { expires: session.sessions[sessionId].expiresAt }); 
             response.cookie("userRole", await userModel.getRole(username));
             response.cookie("username", username);
             
@@ -113,7 +112,7 @@ async function logoutUser(request, response){
         response.sendStatus(401); // Unauthorized access
         return;
     }
-    delete sessions[authenticatedSession.sessionId]
+    delete session.sessions[authenticatedSession.sessionId]
     console.log("Logged out user " + authenticatedSession.userSession.username);
     
     response.cookie("sessionId", "", { expires: new Date() }); // "erase" cookie by forcing it to expire.
@@ -121,49 +120,6 @@ async function logoutUser(request, response){
 
     logger.info(`SHOWING LOGIN information (login page) -- showLogin`);
     response.status(201).render('loginsignup.hbs', pageData);
-}
-
-class Session {
-    /**
-     * Instantiates a new instance of the session class.
-     * @param {*} username The username of the user.
-     * @param {*} expiresAt The expiry date of the session.
-     */
-    constructor(username, expiresAt) {
-        this.username = username
-        this.expiresAt = expiresAt
-
-        logger.info(`SESSION constructor for username ${username} with expiry date ${expiresAt}`);
-    }
-
-    /**
-     * True if the session has expired; otherwise false.
-     */
-    isExpired() {
-        this.expiresAt < (new Date());
-    }
-}
-
-/**
- * Creates a new session with the given information.
- * @param {*} username The username of the user.
- * @param {*} numMinutes The number of minutes the session should last for.
- * @returns The id of the created session.
- */
-function createSession(username, numMinutes) {
-    // Generate a random UUID as the sessionId
-    const sessionId = uuid.v4()
-
-    // Set the expiry time as numMinutes (in milliseconds) after the current time
-    const expiresAt = new Date(Date.now() + numMinutes * 60000);
-    // Create a session object containing information about the user and expiry time
-    const thisSession = new Session(username, expiresAt);
-    // Add the session information to the sessions map, using sessionId as the key
-    sessions[sessionId] = thisSession;
-
-    logger.info(`CREATED SESSION for username ${username} with expiry date ${expiresAt}`);
-
-    return sessionId;
 }
 
 async function showLogin(request, response) {
@@ -199,12 +155,12 @@ function authenticateUser(request) {
         return null;
     }
     // We then get the session of the user from our session map
-    userSession = sessions[sessionId]
+    userSession = session.sessions[sessionId]
     if (!userSession) {
         return null;
     } // If the session has expired, delete the session from our map and return null
     if (userSession.isExpired()) {
-        delete sessions[sessionId];
+        delete session.sessions[sessionId];
         return null;
     }
     return { sessionId, userSession }; // Successfully validated.
