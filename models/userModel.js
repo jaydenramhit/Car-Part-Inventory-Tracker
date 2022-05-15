@@ -246,11 +246,12 @@ async function validateLogin(username, password){
     if (await userExists(username)){
         const queryStatement = `SELECT password FROM Users where username = '${username}'`;
         let result = await connection.query(queryStatement);
-        return userUtils.validateLogin(password, result[0])
+        return userUtils.validateLogin(password, result[0]);
     }
     else{
-        logger.warn(`User doesn't exist - Failed to validate user (${username}) input -- validateLogin`);
         // show message about username not found
+        logger.warn(`User doesn't exist - Failed to validate user (${username}) input -- validateLogin`);
+        return false;
     }
 }
 
