@@ -26,9 +26,10 @@
 {{/if}}
 
 <div id="language">
+  <p id="languageText">Language:</p>
 <form action="/language" method="POST" role="form">
   <select name="language" onchange="this.form.submit()">
-    <option value="" selected="selected" hidden="hidden">{{current}}</option>
+    <option value="" selected="selected" hidden="hidden">{{Current}}</option>
     <option value="en">English</option>
     <option value="fr">French</option>
   </select>

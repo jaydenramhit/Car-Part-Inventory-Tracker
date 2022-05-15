@@ -92,4 +92,10 @@ legend{
 }
 #language{
     margin: 1em 0em 1em 0em;
+    display: flex;
+    flex-direction: row;
+}
+
+#languageText{
+    margin-right: 1em;
 }
