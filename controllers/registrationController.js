@@ -65,7 +65,10 @@ async function createUser(request, response){
 
             // Save cookie that will expire.
             response.cookie("username", username);
+            logger.info(`CREATED cookie username ${username} -- createUser`);
+
             response.cookie("justRegistered", "true");
+            logger.info(`JUST REGISTERED user ${username} -- createUser`);
                 // .redirect('/')// Need cookie or session to pass this message to /
 
             logger.info(`CREATED user ${username} in database -- createUser`);

@@ -18,6 +18,7 @@ function createLanguageCookie(request, response){
     // If the language is specified, create a cookie for it
     if (lang) {
         response.cookie('language', lang);
+        logger.info(`CREATED cookie language ${lang} -- createLanguageCookie`);
     }
 
     // Re-direct page to home page
