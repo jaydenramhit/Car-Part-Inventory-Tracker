@@ -3,6 +3,9 @@ const logger = require('../logger');
 
 const sessions = {};
 
+/**
+ * Represents a session for when the user is on the website.
+ */
 class Session {
     /**
      * Instantiates a new instance of the session class.
