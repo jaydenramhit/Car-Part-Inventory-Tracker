@@ -182,7 +182,10 @@ async function showSignup(request, response){
             display_signup: "block",
             display_login: "block",
             logInlogOutText: "Log In",
-            endpointLogInLogOut: "login"
+            endpointLogInLogOut: "login",
+            usernameHeader: "Username",
+            passwordHeader: "Password",
+            confirmPasswordHeader: "Confirm Password"
         }
     }
     else{
@@ -197,7 +200,10 @@ async function showSignup(request, response){
             display_signup: "block",
             display_login: "block",
             logInlogOutText: "Connexion",
-            endpointLogInLogOut: "login"
+            endpointLogInLogOut: "login",
+            usernameHeader: "Nom D'utilisateur",
+            passwordHeader: "Mot de Passe",
+            confirmPasswordHeader: "Confirmez le Mot de Passe"
         }
     }
 
