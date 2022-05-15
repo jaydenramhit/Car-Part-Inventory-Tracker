@@ -6,8 +6,8 @@ const logger = require('../logger');
 const model = require('../models/carPartModelMysql');
 const userModel = require('../models/userModel');
 const { DatabaseConnectionError } = require('./carPartModelMysql.js');
-var connection;
-connection = model.getConnection();
+var connection = model.getConnection();
+
 /**
  * Initializes a connection to database for user model.
  * @param {*} dbname The database name.
