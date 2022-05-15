@@ -29,6 +29,7 @@ function sendHome(request, response) {
 
     if (!lang || lang === 'en') {
         pageData = {
+            Home: "Home",
             display_signup: "block",
             display_login: "block",
             logInlogOutText: "Log In",
@@ -43,6 +44,7 @@ function sendHome(request, response) {
     }
     else{
         pageData = {
+            Home: "Accueil",
             display_signup: "block",
             display_login: "block",
             logInlogOutText: "Connexion",
@@ -117,6 +119,7 @@ function showAddForm(response) {
 
     if (!lang || lang === 'en') {
         pageData = {
+            Home: "Home",
             showForm: true,
             endpoint: "/parts",
             method: "post",
@@ -124,6 +127,7 @@ function showAddForm(response) {
             legend: "Please enter details for new car part: ",
             formfields: [{ field: "partNumber", pretty: "Part Number", type: "number", required: "required" },
             { field: "name", pretty: "Part Name", required: "required" }, { field: "condition", pretty: "Condition" }, { field: "image", pretty: "Image URL" }],
+            Submit: "Submit",
             display_signup: "block",
             display_login: "block",
             logInlogOutText: "Log In",
@@ -137,6 +141,7 @@ function showAddForm(response) {
     }
     else {
         pageData = {
+            Home: "Accueil",
             showForm: true,
             endpoint: "/parts",
             method: "post",
@@ -144,6 +149,7 @@ function showAddForm(response) {
             legend: "Veuillez entrer les détails de la nouvelle pièce de voiture: ",
             formfields: [{ field: "partNumber", pretty: "Numéro de Pièce", type: "number", required: "required" },
             { field: "name", pretty: "Nom de la Pièce", required: "required" }, { field: "condition", pretty: "État" }, { field: "image", pretty: "URL de L'image" }],
+            Submit: "Soumettre",
             display_signup: "block",
             display_login: "block",
             logInlogOutText: "Connexion",
@@ -171,6 +177,7 @@ function showListOneForm(response) {
 
     if (!lang || lang === 'en') {
         pageData = {
+            Home: "Home",
             showForm: true,
             endpoint: "/parts",
             submitfn: "this.action = this.action + '/'+ this.partNumber.value",
@@ -179,6 +186,7 @@ function showListOneForm(response) {
             Current: "English",
             legend: "Please enter the part number to display: ",
             formfields: [{ field: "partNumber", pretty: "Original Part Number", type: "number" }],
+            Submit: "Submit",
             display_signup: "block",
             display_login: "block",
             logInlogOutText: "Log In",
@@ -192,6 +200,7 @@ function showListOneForm(response) {
     }
     else {
         pageData = {
+            Home: "Accueil",
             showForm: true,
             endpoint: "/parts",
             submitfn: "this.action = this.action + '/'+ this.partNumber.value",
@@ -200,6 +209,7 @@ function showListOneForm(response) {
             Current: "French",
             legend: "Veuillez entrer le numéro de pièce à afficher: ",
             formfields: [{ field: "partNumber", pretty: "Numéro De Pièce", type: "number" }],
+            Submit: "Soumettre",
             display_signup: "block",
             display_login: "block",
             logInlogOutText: "Connexion",
@@ -229,6 +239,7 @@ function showEditForm(response) {
 
     if (!lang || lang === 'en') {
         pageData = {
+            Home: "Home",
             showForm: true,
             endpoint: "/parts",
             submitfn: "this.action = this.action + '/'+ this.partNumber.value",
@@ -238,6 +249,7 @@ function showEditForm(response) {
             legend: "Please enter the new part name for the part to be changed: ",
             formfields: [{ field: "partNumber", pretty: "Original Part Number", type: "number" },
             { field: "name", pretty: "New Part Name" }],
+            Submit: "Submit",
             display_signup: "block",
             display_login: "block",
             logInlogOutText: "Log In",
@@ -251,6 +263,7 @@ function showEditForm(response) {
     }
     else {
         pageData = {
+            Home: "Accueil",
             showForm: true,
             endpoint: "/parts",
             submitfn: "this.action = this.action + '/'+ this.partNumber.value",
@@ -260,6 +273,7 @@ function showEditForm(response) {
             legend: "Veuillez entrer le nouveau nom de la pièce à modifier: ",
             formfields: [{ field: "partNumber", pretty: "Numéro De Pièce", type: "number" },
             { field: "name", pretty: "Nouveau Nom De Pièce" }],
+            Submit: "Soumettre",
             display_signup: "block",
             display_login: "block",
             logInlogOutText: "Connexion",
@@ -287,6 +301,7 @@ function showDeleteForm(response) {
 
     if (!lang || lang === 'en') {
         pageData = {
+            Home: "Home",
             showForm: true,
             endpoint: "/parts",
             submitfn: "this.action = this.action + '/'+ this.partNumber.value",
@@ -295,6 +310,7 @@ function showDeleteForm(response) {
             Current: "English",
             legend: "Please enter the part number of the part that should be deleted:",
             formfields: [{ field: "partNumber", pretty: "Part Number", type: "number" }],
+            Submit: "Submit",
             display_signup: "block",
             display_login: "block",
             logInlogOutText: "Log In",
@@ -308,6 +324,7 @@ function showDeleteForm(response) {
     }
     else {
         pageData = {
+            Home: "Accueil",
             showForm: true,
             endpoint: "/parts",
             submitfn: "this.action = this.action + '/'+ this.partNumber.value",
@@ -316,6 +333,7 @@ function showDeleteForm(response) {
             Current: "French",
             legend: "Veuillez entrer le numéro de pièce de la pièce à supprimer :",
             formfields: [{ field: "partNumber", pretty: "Numéro De Pièce", type: "number" }],
+            Submit: "Soumettre",
             display_signup: "block",
             display_login: "block",
             logInlogOutText: "Connexion",
