@@ -17,23 +17,43 @@ async function createUser(request, response){
     let username = request.body.username;
     let password = request.body.password;
     let confirmPassword = request.body.confirmPassword;
+    const lang = request.cookies.language;
+    let errorData;
 
     // Making sure the password and confirmed password match
     if (password != confirmPassword){
         // Error data for when an error occurs
-        const errorData = {
-            alertOccurred: true,
-            alertMessage: "The passwords you have entered are not the same.",
-            alertLevel: 'danger',
-            alertLevelText: 'Danger',
-            alertHref: 'exclamation-triangle-fill',
-            titleName: 'Sign Up',
-            pathNameForActionForm: 'signup',
-            showConfirmPassword: true,
-            oppositeFormAction: 'login',
-            oppositeFormName: 'Log in',
-            dontHaveAccountText: "Already have an account?"
+        if (!lang || lang === 'en') {
+            errorData = {
+                alertOccurred: true,
+                alertMessage: "The passwords you have entered are not the same.",
+                alertLevel: 'danger',
+                alertLevelText: 'Danger',
+                alertHref: 'exclamation-triangle-fill',
+                titleName: 'Sign Up',
+                pathNameForActionForm: 'signup',
+                showConfirmPassword: true,
+                oppositeFormAction: 'login',
+                oppositeFormName: 'Log in',
+                dontHaveAccountText: "Already have an account?"
+            }
         }
+        else{
+            errorData = {
+                alertOccurred: true,
+                alertMessage: "Les mots de passe que vous avez entré ne sont pas les mêmes.",
+                alertLevel: 'danger',
+                alertLevelText: 'Danger',
+                alertHref: 'exclamation-triangle-fill',
+                titleName: 'Enregistrer',
+                pathNameForActionForm: 'signup',
+                showConfirmPassword: true,
+                oppositeFormAction: 'login',
+                oppositeFormName: 'Connexion',
+                dontHaveAccountText: "Vous avez déjà un compte?"
+            }
+        }
+
         
         logger.info(`DID NOT CREATE user ${username} because of passwords NOT matching -- createUser`);
         response.status(404).render('loginsignup.hbs', errorData);
@@ -146,20 +166,41 @@ async function createUser(request, response){
  * @param {*} response 
  */
 async function showSignup(request, response){
+    const lang = request.cookies.language;
+    let pageData;
     // Page data 
-    const pageData = {
-        alertOccurred: false,
-        titleName: 'Sign Up',
-        pathNameForActionForm: 'signup',
-        showConfirmPassword: true,
-        oppositeFormAction: 'login',
-        oppositeFormName: 'Log in',
-        dontHaveAccountText: "Already have an account?",
-        display_signup: "block",
-        display_login: "block",
-        logInlogOutText: "Log In",
-        endpointLogInLogOut: "login"
+    
+    if (!lang || lang === 'en'){
+        pageData = {
+            alertOccurred: false,
+            titleName: 'Sign Up',
+            pathNameForActionForm: 'signup',
+            showConfirmPassword: true,
+            oppositeFormAction: 'login',
+            oppositeFormName: 'Log in',
+            dontHaveAccountText: "Already have an account?",
+            display_signup: "block",
+            display_login: "block",
+            logInlogOutText: "Log In",
+            endpointLogInLogOut: "login"
+        }
     }
+    else{
+        pageData = {
+            alertOccurred: false,
+            titleName: 'Enregistrer',
+            pathNameForActionForm: 'signup',
+            showConfirmPassword: true,
+            oppositeFormAction: 'login',
+            oppositeFormName: 'Connexion',
+            dontHaveAccountText: "Vous avez déjà un compte?",
+            display_signup: "block",
+            display_login: "block",
+            logInlogOutText: "Connexion",
+            endpointLogInLogOut: "login"
+        }
+    }
+
 
     logger.info(`SHOWING SIGNUP information (signup page) -- showSignup`);
     response.status(201).render('loginsignup.hbs', pageData);
