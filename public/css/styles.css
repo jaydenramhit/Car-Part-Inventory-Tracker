@@ -29,7 +29,17 @@ footer {
     text-align: left;
     padding: 8px;
   }
-.title { color:  #0D6EFD }
+
+.title { 
+    color:  #0D6EFD ;
+    text-decoration: none;
+
+}
+.title:hover{
+    color:  #0D6EFD ;
+}
+
+
 #sidebar-wrapper div form button {
     background-color:  #0D6EFD;
     color: white
