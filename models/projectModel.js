@@ -110,6 +110,7 @@ async function getAllProjects(username){
     let results = await connection.query(query);
     return results[0];
 }
+
 /**
  * Associates a part with a project
  * @param {*} projectId 

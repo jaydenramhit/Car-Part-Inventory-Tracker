@@ -32,6 +32,7 @@ const { LOGGED_IN_USER } = require('./loginController');
         // Add project
         let projectId = await projectModel.addProject(name, description)
         await projectModel.addUserToProject(projectId, userId);
+        let projs = await projectModel.getAllProjects();
 
         const pageData = {
             alertOccurred: true,
@@ -41,7 +42,8 @@ const { LOGGED_IN_USER } = require('./loginController');
             alertHref: 'exclamation-triangle-fill',
             titleName: 'Create a Project',
             pathNameForActionForm: 'projects',
-            projects: await partsModel.getAllProjects()
+            projects: await projectModel.getAllProjects(),
+            clickedNewProject: false
         }
     
         logger.info(`CREATED PROJECT (Name: ${name}, Description: ${description} -- loginUser`);
@@ -56,7 +58,8 @@ const { LOGGED_IN_USER } = require('./loginController');
             alertHref: 'exclamation-triangle-fill',
             titleName: 'Create a Project',
             pathNameForActionForm: 'projects',
-            projects: await partsModel.getAllProjects()
+            projects: await projectModel.getAllProjects(),
+            clickedNewProject: false
         }
         
         // If the error is an instance of the DatabaseConnectionError error
@@ -110,6 +113,11 @@ const { LOGGED_IN_USER } = require('./loginController');
     response.status(201).render('projects.hbs', pageData);
 }
 
+/**
+ * Shows the create project form.
+ * @param {*} request 
+ * @param {*} response 
+ */
 async function showCreateForm(request, response){
     // Page data 
     const pageData = {
@@ -120,7 +128,7 @@ async function showCreateForm(request, response){
         pathNameForActionForm: 'projects',
         Home: "Home",
         logInlogOutText: "Log Out",
-        // loggedInUser: LOGGED_IN_USER,
+        loggedInUser: LOGGED_IN_USER,
         clickedNewProject: true
     }
 
