@@ -12,22 +12,25 @@
       <li class="nav-item active">
         <a class="nav-link" href="/">{{Home}}</a>
       </li>
+
+      <!--If the user is logged in, show the projects tab-->
       {{#if loggedInUser}}
-      <li class="nav-item active">
-        <a class="nav-link" href="/projects" id="projects-nav">Projects</a>
-      </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/projects" id="projects-nav">Projects</a>
+        </li>
       {{/if}}
     </ul>
     <ul class="navbar-nav">
+       <!--If the user is logged in, show the users name in the nav-->
       {{#if loggedInUser}}
-      <li class="nav-right" style="display: flex; flex-direction: row; 
-        align-items: center; margin-right: 0.75rem; font-size: 16px;">{{loggedInUser}}</li>
+        <li class="nav-right" style="display: flex; flex-direction: row; 
+          align-items: center; margin-right: 0.75rem; font-size: 16px;">{{loggedInUser}}</li>
       {{/if}}
       <li class="nav-right" style="display:{{display_login}};">
         <a class="nav-link" href="/users/{{endpointLogInLogOut}}">{{logInlogOutText}}</a>
       </li>
       <li class="nav-right" style="display:{{display_signup}}">
-        <a class="nav-link" href="/users/signup">Sign Up</a>
+        <a class="nav-link" href="/users/signup">{{signUpText}}</a>
       </li>
     </ul>
   </div>

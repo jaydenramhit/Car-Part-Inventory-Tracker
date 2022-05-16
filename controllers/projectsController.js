@@ -9,6 +9,7 @@ const validUtils = require('../validateUtils.js');
 const partsModel = require('../models/carPartModelMysql');
 const usersModel = require('../models/userModel');
 const projectModel = require('../models/projectModel');
+const { LOGGED_IN_USER } = require('./loginController');
 
 /**
  * POST controller method that allows the user to create projects
@@ -85,6 +86,7 @@ const projectModel = require('../models/projectModel');
  * @param {*} response 
  */
  async function showProjects(request, response){
+
     // Page data 
     const pageData = {
         alertOccurred: false,
@@ -92,7 +94,10 @@ const projectModel = require('../models/projectModel');
         tableMessage: "You do not have any Projects.",
         titleName: 'Create a Project',
         pathNameForActionForm: 'projects',
-        projects: await projectModel.getAllProjects(request.cookies.username)
+        projects: await projectModel.getAllProjects(request.cookies.username),
+        Home: "Home",
+        logInlogOutText: "Log Out",
+        loggedInUser: LOGGED_IN_USER
     }
 
     // If there's no projects

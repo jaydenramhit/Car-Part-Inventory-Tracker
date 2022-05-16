@@ -107,3 +107,10 @@ table {
 #languageText{
     margin-right: 1em;
 }
+
+#add-project-btn{
+    border: 1px solid #0D6EFD;
+    border-radius: 0.85rem;
+    background: none;
+    padding: 5px 10px;
+}

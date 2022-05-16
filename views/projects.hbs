@@ -20,7 +20,55 @@
     </div>
 {{/if}}
 
-<div class="row">
+<button id="add-project-btn">
+    <i class="fa fa-plus" style="font-size:17px; margin-right: 4px;"></i> 
+    Add Project
+</button>
+
+<div class="py-5">
+    <div class="container">
+      <div class="row hidden-md-up">
+        {{#each projects}}
+            <div class="col-md-4">
+                <div class="card" style="width: 18rem;">
+                    <img src="..." class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+        {{/each}}
+      </div><br>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+<script src="https://pingendo.com/assets/bootstrap/bootstrap-4.0.0-alpha.6.min.js"></script>
+
+{{!-- <div class="container">
+  <div class="row">
+    <div class="col">
+      <div class="card" style="width: 18rem;">
+        <img src="..." class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+      </div>
+    </div> --}}
+    {{!-- <div class="col">
+      Column
+    </div>
+    <div class="col">
+      Column
+    </div> --}}
+  {{!-- </div> --}}
+{{!-- </div> --}}
+
+{{!-- <div class="row">
     <div class="col-md-8 offset-md-2">
         {{#if showTable}}
         <table>
@@ -46,7 +94,8 @@
             parts necessary to create your dream car!</p>
         {{/if}}
     </div>
-</div>
+</div> --}}
+
 <!--container for form-->
 <section id="form-container">
 
@@ -74,9 +123,6 @@
       <div class="row justify-content-center">
           <button class="btn btn-primary submit-btn" style="width:100%;" type="submit">{{titleName}}</button>
       </div>
-
-      <!--Create a small thin line after the submit button-->
-       <hr>
   </form>
 
-</section>
+</section> 
