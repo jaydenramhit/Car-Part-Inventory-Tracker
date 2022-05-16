@@ -19,13 +19,13 @@
         <div>{{alertMessage}}</div>
     </div>
 {{/if}}
-
+{{!-- 
 <form id="new-project-form" action="/projects/new" method="post">
     <button id="add-project-btn">
         <i class="fa fa-plus" style="font-size:17px; margin-right: 4px;"></i> 
         New Project
     </button>
-</form>
+</form> --}}
 
 {{#if clickedNewProject}}
     <!--container for form-->
@@ -59,33 +59,54 @@
 
     </section> 
 {{else}}
-    <div class="py-sm-5">
-        <div class="container">
-        <div class="row hidden-md-up">
-            {{#each projects}}
-                <div class="card" style="width: 18rem; margin-right: 1.5rem; margin-bottom: 1.5rem;">
-                    <img class="card-img-top" src="..." alt="Card image cap">
-                    <div class="card-body">
-                        <h5 class="card-title">{{this.name}}</h5>
-                        <p class="card-text">{{this.description}}</p>
-                        <a href="#" class="btn btn-primary">See more</a>
-                    </div>
-                </div>
-
-
-                {{!-- <div class="col-md-4">
-                    <div class="card" style="width: 18rem;">
-                        <img src="..." class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">{{this.name}}</h5>
-                            <p class="card-text"></p>
-                            <a href="#" class="btn btn-primary">See more</a>
-                        </div>
-                    </div>
-                </div> --}}
-            {{/each}}
-        </div><br>
+    <div id="grid-container-projects">
+        <div class="grid-item-1">
+            <form id="new-project-form" action="/projects/new" method="post">
+                <button id="add-project-btn">
+                    <i class="fa fa-plus" style="font-size:17px; margin-right: 4px;"></i> 
+                    New Project
+                </button>
+            </form>
         </div>
+{{!-- 
+        <div class="card mb-3">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+            </div>
+        </div> --}}
+
+        {{!-- <div class="py-sm-5 grid-item-2">
+            <div class="container"> --}}
+                {{!-- <div class="row hidden-md-up"> --}}
+                    <div id="container-projs">
+                        {{#each projects}}
+                            {{!-- <div class="card" style="width: 18rem; margin: 0 3rem 3rem 0;">
+                                <img class="card-img-top" src="..." alt="Card image cap">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{this.name}}</h5>
+                                    <p class="card-text">{{this.description}}</p>
+                                    <a href="#" class="btn btn-primary">See more</a>
+                                </div>
+                            </div> --}}
+
+
+                            <div class="card">
+                                <img src="..." class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{this.name}}</h5>
+                                    <p class="card-text">{{this.description}}</p>
+                                    <a href="#" class="btn btn-primary">See more</a>
+                                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                                </div>
+                            </div>
+                        {{/each}}
+                    </div>
+                {{!-- </div><br> --}}
+            {{!-- </div>
+        </div> --}}
     </div>
 {{/if}}
 
