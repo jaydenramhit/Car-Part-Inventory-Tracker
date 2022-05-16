@@ -249,7 +249,7 @@ async function showSignup(request, response){
             display_signup: "block",
             display_login: "block",
             logInlogOutText: "Connexion",
-            signUpText: "S'inscrire",
+            signUpText: "Enregistrer",
             endpointLogInLogOut: "login",
             usernameHeader: "Nom D'utilisateur",
             passwordHeader: "Mot de Passe",

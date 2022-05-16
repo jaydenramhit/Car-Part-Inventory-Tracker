@@ -48,6 +48,7 @@ async function loginUser(request, response){
                     display_signup: "none",
                     display_login: "block",
                     logInlogOutText: "Log Out",
+                    signUpText: "Sign Up",
                     endpointLogInLogOut: "login",
                     loggedInUser: username
                 }
@@ -62,6 +63,7 @@ async function loginUser(request, response){
                     display_signup: "none",
                     display_login: "block",
                     logInlogOutText: "Déconnecter",
+                    signUpText: "Enregistrer",
                     endpointLogInLogOut: "login",
                     loggedInUser: username
                 }
@@ -204,6 +206,7 @@ async function showLogin(request, response) {
             display_signup: "block",
             display_login: "block",
             logInlogOutText: "Log In",
+            signUpText: "Sign Up",
             endpointLogInLogOut: "login",
             usernameHeader: "Username",
             passwordHeader: "Password"
@@ -221,6 +224,7 @@ async function showLogin(request, response) {
             display_signup: "block",
             display_login: "block",
             logInlogOutText: "Connexion",
+            signUpText: "Enregistrer",
             endpointLogInLogOut: "login",
             usernameHeader: "Nom D'utilisateur",
             passwordHeader: "Mot de Passe"
