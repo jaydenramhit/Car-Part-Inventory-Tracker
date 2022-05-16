@@ -89,7 +89,7 @@ function showForm(request, response) {
         // Case of getting all car parts
         case 'list':
             logger.info(`SWITCH CASE list (all) -- showForm`);
-            response.redirect('/parts')
+            response.redirect('/parts');
             break;
 
         // Case of updating a car part

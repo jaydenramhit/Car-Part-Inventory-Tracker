@@ -127,7 +127,11 @@ async function getAllCarParts(request, response){
                         }
                     }
 
-                    let output = {part, showList: true};
+                    let output = {
+                        part, 
+                        showList: true
+                    };
+
                     logger.info(`RETRIEVED ALL car parts from database -- getAllCarParts`);
                     response.status(200).render('home.hbs', output)
                 }  

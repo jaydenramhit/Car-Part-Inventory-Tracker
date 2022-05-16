@@ -2,6 +2,7 @@
 
 const express = require('express');
 const { DatabaseConnectionError } = require('../models/carPartModelMysql');
+const carPartModel = require('../models/carPartModelMysql');
 const router = express.Router();
 const routeRoot = '/';
 const userModel = require('../models/userModel');
@@ -37,6 +38,7 @@ async function loginUser(request, response){
 
             LOGGED_IN_USER = username;
             const lang = request.cookies.language;
+            let allParts = await carPartModel.findAllCarParts();
 
             if (!lang || lang === 'en'){
                 pageData = {
@@ -50,7 +52,17 @@ async function loginUser(request, response){
                     logInlogOutText: "Log Out",
                     signUpText: "Sign Up",
                     endpointLogInLogOut: "login",
-                    loggedInUser: username
+                    loggedInUser: username,
+                    Home: "Home",
+                    Add: "Add a car part",
+                    Show: "Find a Car Part",
+                    List: "Show all Car Parts",
+                    Edit: "Update a Car Part",
+                    Delete: "Delete a Car Part",
+                    showList: true,
+                    Current: "English",
+                    part: allParts,
+                    isUserLoggedIn: true
                 }
             }
             else{
@@ -65,7 +77,8 @@ async function loginUser(request, response){
                     logInlogOutText: "Déconnecter",
                     signUpText: "Enregistrer",
                     endpointLogInLogOut: "login",
-                    loggedInUser: username
+                    loggedInUser: username,
+                    Home: "Retournez",
                 }
             }
 
@@ -90,7 +103,8 @@ async function loginUser(request, response){
                     showConfirmPassword: false,
                     oppositeFormAction: 'signup',
                     oppositeFormName: 'Sign up',
-                    dontHaveAccountText: "Don't have an account?"
+                    dontHaveAccountText: "Don't have an account?",
+                    Home: "Home",
                 }
             }
             else{
@@ -105,7 +119,8 @@ async function loginUser(request, response){
                     showConfirmPassword: false,
                     oppositeFormAction: 'signup',
                     oppositeFormName: 'Enregistrer',
-                    dontHaveAccountText: "Vous n'avez pas de compte?"
+                    dontHaveAccountText: "Vous n'avez pas de compte?",
+                    Home: "Retournez",
                 }
             }
 
@@ -131,7 +146,8 @@ async function loginUser(request, response){
                 showConfirmPassword: false,
                 oppositeFormAction: 'signup',
                 oppositeFormName: 'Sign up',
-                dontHaveAccountText: "Don't have an account?"
+                dontHaveAccountText: "Don't have an account?",
+                Home: "Home",
             }
         }
         else{
@@ -146,7 +162,8 @@ async function loginUser(request, response){
                 showConfirmPassword: false,
                 oppositeFormAction: 'signup',
                 oppositeFormName: 'Enregistrer',
-                dontHaveAccountText: "Vous n'avez pas de compte?"
+                dontHaveAccountText: "Vous n'avez pas de compte?",
+                Home: "Retournez",
             }
         }
 
@@ -209,7 +226,8 @@ async function showLogin(request, response) {
             signUpText: "Sign Up",
             endpointLogInLogOut: "login",
             usernameHeader: "Username",
-            passwordHeader: "Password"
+            passwordHeader: "Password",
+            Home: "Home",
         }
     }
     else{
@@ -227,7 +245,8 @@ async function showLogin(request, response) {
             signUpText: "Enregistrer",
             endpointLogInLogOut: "login",
             usernameHeader: "Nom D'utilisateur",
-            passwordHeader: "Mot de Passe"
+            passwordHeader: "Mot de Passe",
+            Home: "Retournez",
         }
     }
 
@@ -262,6 +281,8 @@ function authenticateUser(request) {
 
 router.get('/users/login', showLogin)
 router.post("/users/login", loginUser)
+
+
 module.exports = {
     router,
     routeRoot,
