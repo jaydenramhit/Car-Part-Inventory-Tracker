@@ -35,6 +35,9 @@ async function loginUser(request, response){
             
             let pageData;
 
+            LOGGED_IN_USER = username;
+            const lang = request.cookies.language;
+
             if (!lang || lang === 'en'){
                 pageData = {
                     alertOccurred: true,
@@ -49,7 +52,6 @@ async function loginUser(request, response){
                     loggedInUser: username
                 }
             }
-            LOGGED_IN_USER = username;
             else{
                 pageData = {
                     alertOccurred: true,
@@ -72,6 +74,7 @@ async function loginUser(request, response){
         else{
             // Error data for when an error occurs
             let errorData;
+            const lang = request.cookies.language;
 
             if (!lang || lang === 'en'){
                 errorData = {
@@ -112,6 +115,7 @@ async function loginUser(request, response){
     } catch(error) {
 
         let errorData;
+        const lang = request.cookies.language;
         // Error data for when an error occurs
         if (!lang || lang === 'en'){
             errorData = {
