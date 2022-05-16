@@ -110,8 +110,27 @@ const { LOGGED_IN_USER } = require('./loginController');
     response.status(201).render('projects.hbs', pageData);
 }
 
+async function showCreateForm(request, response){
+    // Page data 
+    const pageData = {
+        alertOccurred: false,
+        showTable: true,
+        tableMessage: "You do not have any Projects.",
+        titleName: 'Create a Project',
+        pathNameForActionForm: 'projects',
+        Home: "Home",
+        logInlogOutText: "Log Out",
+        // loggedInUser: LOGGED_IN_USER,
+        clickedNewProject: true
+    }
+
+    // logger.info(`SHOWING ALL PROJECTS  -- showProjects`);
+    response.status(201).render('projects.hbs', pageData);
+}
+
 router.post("/projects", createProject);
 router.get("/projects", showProjects);
+router.post("/projects/new", showCreateForm);
 
 
 module.exports = {
