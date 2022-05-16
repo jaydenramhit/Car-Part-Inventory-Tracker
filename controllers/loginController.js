@@ -33,19 +33,41 @@ async function loginUser(request, response){
             response.cookie("userRole", await userModel.getRole(username));
             response.cookie("username", username);
             
-            const pageData = {
-                alertOccurred: true,
-                alertMessage: `${username} has successfully logged in!`,
-                alertLevel: 'success',
-                alertLevelText: 'Success',
-                alertHref: 'check-circle-fill',
-                display_signup: "none",
-                display_login: "block",
-                logInlogOutText: "Log Out",
-                endpointLogInLogOut: "login",
-                loggedInUser: username
-            }
+            let pageData;
+
             LOGGED_IN_USER = username;
+            const lang = request.cookies.language;
+
+            if (!lang || lang === 'en'){
+                pageData = {
+                    alertOccurred: true,
+                    alertMessage: `${username} has successfully logged in!`,
+                    alertLevel: 'success',
+                    alertLevelText: 'Success',
+                    alertHref: 'check-circle-fill',
+                    display_signup: "none",
+                    display_login: "block",
+                    logInlogOutText: "Log Out",
+                    signUpText: "Sign Up",
+                    endpointLogInLogOut: "login",
+                    loggedInUser: username
+                }
+            }
+            else{
+                pageData = {
+                    alertOccurred: true,
+                    alertMessage: `${username} s'est connecté avec succès!`,
+                    alertLevel: 'success',
+                    alertLevelText: 'Success',
+                    alertHref: 'check-circle-fill',
+                    display_signup: "none",
+                    display_login: "block",
+                    logInlogOutText: "Déconnecter",
+                    signUpText: "Enregistrer",
+                    endpointLogInLogOut: "login",
+                    loggedInUser: username
+                }
+            }
 
             logger.info(`LOGGED IN user ${username} -- loginUser`);
             // Render the home page
@@ -53,9 +75,54 @@ async function loginUser(request, response){
         }
         else{
             // Error data for when an error occurs
-            const errorData = {
+            let errorData;
+            const lang = request.cookies.language;
+
+            if (!lang || lang === 'en'){
+                errorData = {
+                    alertOccurred: true,
+                    alertMessage: "Invalid username or password.",
+                    alertLevel: 'danger',
+                    alertLevelText: 'Danger',
+                    alertHref: 'exclamation-triangle-fill',
+                    titleName: 'Log In',
+                    pathNameForActionForm: 'login',
+                    showConfirmPassword: false,
+                    oppositeFormAction: 'signup',
+                    oppositeFormName: 'Sign up',
+                    dontHaveAccountText: "Don't have an account?"
+                }
+            }
+            else{
+                errorData = {
+                    alertOccurred: true,
+                    alertMessage: "Nom d'utilisateur ou mot de passe invalide.",
+                    alertLevel: 'danger',
+                    alertLevelText: 'Danger',
+                    alertHref: 'exclamation-triangle-fill',
+                    titleName: 'Connexion',
+                    pathNameForActionForm: 'login',
+                    showConfirmPassword: false,
+                    oppositeFormAction: 'signup',
+                    oppositeFormName: 'Enregistrer',
+                    dontHaveAccountText: "Vous n'avez pas de compte?"
+                }
+            }
+
+
+            logger.info(`DID NOT LOG IN user ${username} because of validation failure -- loginUser`);
+            response.status(404).render('loginsignup.hbs', errorData);
+        }
+            
+    } catch(error) {
+
+        let errorData;
+        const lang = request.cookies.language;
+        // Error data for when an error occurs
+        if (!lang || lang === 'en'){
+            errorData = {
                 alertOccurred: true,
-                alertMessage: "Invalid username or password.",
+                alertMessage: "",
                 alertLevel: 'danger',
                 alertLevelText: 'Danger',
                 alertHref: 'exclamation-triangle-fill',
@@ -66,27 +133,23 @@ async function loginUser(request, response){
                 oppositeFormName: 'Sign up',
                 dontHaveAccountText: "Don't have an account?"
             }
-
-            logger.info(`DID NOT LOG IN user ${username} because of validation failure -- loginUser`);
-            response.status(404).render('loginsignup.hbs', errorData);
         }
-            
-    } catch(error) {
-
-        // Error data for when an error occurs
-        const errorData = {
-            alertOccurred: true,
-            alertMessage: "",
-            alertLevel: 'danger',
-            alertLevelText: 'Danger',
-            alertHref: 'exclamation-triangle-fill',
-            titleName: 'Log In',
-            pathNameForActionForm: 'login',
-            showConfirmPassword: false,
-            oppositeFormAction: 'signup',
-            oppositeFormName: 'Sign up',
-            dontHaveAccountText: "Don't have an account?"
+        else{
+            errorData = {
+                alertOccurred: true,
+                alertMessage: "",
+                alertLevel: 'danger',
+                alertLevelText: 'Danger',
+                alertHref: 'exclamation-triangle-fill',
+                titleName: 'Connexion',
+                pathNameForActionForm: 'login',
+                showConfirmPassword: false,
+                oppositeFormAction: 'signup',
+                oppositeFormName: 'Enregistrer',
+                dontHaveAccountText: "Vous n'avez pas de compte?"
+            }
         }
+
 
         // If the error is an instance of the DatabaseConnectionError error
         if (error instanceof DatabaseConnectionError){
@@ -126,21 +189,48 @@ async function logoutUser(request, response){
 }
 
 async function showLogin(request, response) {
+    const lang = request.cookies.language;
 
     // Page data 
-    const pageData = {
-        alertOccurred: false,
-        titleName: 'Log In',
-        pathNameForActionForm: 'login',
-        showConfirmPassword: false,
-        oppositeFormAction: 'signup',
-        oppositeFormName: 'Sign up',
-        dontHaveAccountText: "Don't have an account?",
-        display_signup: "block",
-        display_login: "block",
-        logInlogOutText: "Log In",
-        endpointLogInLogOut: "login"
+    let pageData;
+
+    if (!lang || lang === 'en'){
+        pageData = {
+            alertOccurred: false,
+            titleName: 'Log In',
+            pathNameForActionForm: 'login',
+            showConfirmPassword: false,
+            oppositeFormAction: 'signup',
+            oppositeFormName: 'Sign up',
+            dontHaveAccountText: "Don't have an account?",
+            display_signup: "block",
+            display_login: "block",
+            logInlogOutText: "Log In",
+            signUpText: "Sign Up",
+            endpointLogInLogOut: "login",
+            usernameHeader: "Username",
+            passwordHeader: "Password"
+        }
     }
+    else{
+        pageData = {
+            alertOccurred: false,
+            titleName: 'Connexion',
+            pathNameForActionForm: 'login',
+            showConfirmPassword: false,
+            oppositeFormAction: 'signup',
+            oppositeFormName: 'Enregistrer',
+            dontHaveAccountText: "Vous n'avez pas de compte?",
+            display_signup: "block",
+            display_login: "block",
+            logInlogOutText: "Connexion",
+            signUpText: "Enregistrer",
+            endpointLogInLogOut: "login",
+            usernameHeader: "Nom D'utilisateur",
+            passwordHeader: "Mot de Passe"
+        }
+    }
+
 
     response.status(201).render('loginsignup.hbs', pageData);
 }
