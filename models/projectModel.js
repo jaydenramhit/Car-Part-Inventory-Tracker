@@ -5,6 +5,7 @@ const validUtils = require('../validateUtils.js');
 const logger = require('../logger');
 const model = require('../models/carPartModelMysql');
 const userModel = require('../models/userModel');
+const partModel = require('../models/carPartModelMysql');
 const { DatabaseConnectionError } = require('./carPartModelMysql.js');
 var connection;
 connection = model.getConnection();
@@ -116,18 +117,19 @@ async function getAllProjects(username){
  * @param {*} partNumber 
  */
 async function addPartToProject(projectId, partNumber){
-    if(projectExists(projectId)){
-        try {
-            const insertStatement = `INSERT INTO PartProject (projectId, partNumber) values (${projectId, partNumber})`;
+    try {
+        if (projectExists(projectId) && partModel.verifyCarPartExists(partNumber)) {
+
+            const insertStatement = `INSERT INTO PartProject (projectId, partNumber) values (${projectId}, ${partNumber})`;
             await connection.execute(insertStatement);
-        }    
-        catch (error) {
-            logger.error(error);
-            throw new DatabaseConnectionError();
         }
+        else
+            throw new DatabaseConnectionError();
     }
-    else
+    catch (error) {
+        logger.error(error);
         throw new DatabaseConnectionError();
+    }
 }     
 //#region Project operations
 /**
@@ -135,21 +137,22 @@ async function addPartToProject(projectId, partNumber){
  * @param {*} projectId 
  * @param {*} partNumber 
  */
- async function addUserToProject(projectId, id){
-    if(projectExists(projectId)){
-        try {
+async function addUserToProject(projectId, id) {
+    try {
+        if (projectExists(projectId) && userModel.userExists(id)) {
+
             const insertStatement = `INSERT INTO UsersProject (projectId, id) values (${projectId}, ${id})`;
             await connection.execute(insertStatement);
-        }    
-        catch (error) {
-            logger.error(error);
-            throw new DatabaseConnectionError();
         }
+        else
+            throw new DatabaseConnectionError();
     }
-    else
+    catch (error) {
+        logger.error(error);
         throw new DatabaseConnectionError();
-        
+    }
 }
+
 /**
  * A helper method that determines if a project exists or not
  * @param {*} projectId 
