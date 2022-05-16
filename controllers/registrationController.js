@@ -65,7 +65,10 @@ async function createUser(request, response){
 
             // Save cookie that will expire.
             response.cookie("username", username);
+            logger.info(`CREATED cookie username ${username} -- createUser`);
+
             response.cookie("justRegistered", "true");
+            logger.info(`JUST REGISTERED user ${username} -- createUser`);
                 // .redirect('/')// Need cookie or session to pass this message to /
 
             logger.info(`CREATED user ${username} in database -- createUser`);
@@ -227,6 +230,7 @@ async function showSignup(request, response){
             display_signup: "block",
             display_login: "block",
             logInlogOutText: "Log In",
+            signUpText: "Sign Up",
             endpointLogInLogOut: "login",
             usernameHeader: "Username",
             passwordHeader: "Password",
@@ -245,6 +249,7 @@ async function showSignup(request, response){
             display_signup: "block",
             display_login: "block",
             logInlogOutText: "Connexion",
+            signUpText: "S'inscrire",
             endpointLogInLogOut: "login",
             usernameHeader: "Nom D'utilisateur",
             passwordHeader: "Mot de Passe",

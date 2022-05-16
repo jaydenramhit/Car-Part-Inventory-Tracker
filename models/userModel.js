@@ -30,45 +30,10 @@ async function initializeUserModel(dbname, reset){
     
         // Dropping the tables if resetting them
         if (reset) {
-            // Dropping the Users table
-            resetTable("Users");
-            // let dropQuery = "DROP TABLE IF EXISTS Users";
-            // await connection.execute(dropQuery);
-            // logger.info("Users table dropped");
-            // .then(console.log("User table dropped")).catch((error) => { console.error(error) });
-    
-            // Dropping the Roles table
-            resetTable("Roles");
-            // dropQuery = "DROP TABLE IF EXISTS Roles";
-            // await connection.execute(dropQuery);
-            // logger.info("Roles table dropped");
-            // .then(console.log("Roles table dropped")).catch((error) => { console.error(error) });
+            await resetTables(connection);
         }
         
-        // Creating the Roles table
-        const createRoleStatement = `CREATE TABLE IF NOT EXISTS Roles(roleID int, rolename VARCHAR(50), PRIMARY KEY (roleID))`;
-        await connection.execute(createRoleStatement);
-        logger.info("Roles table created/exists");
-        // .then(logger.info("Role table created/exists")).catch((error) => { logger.error(error) });
-    
-        // Ignoring invalid data into Roles table
-        let insertDefaultRoles = 'INSERT IGNORE INTO Roles(roleID, rolename) values (1, "admin");';
-        await connection.execute(insertDefaultRoles);
-        logger.info("Roles table created/exists");
-        // .then(logger.info("Role table created/exists")).catch((error) => { logger.error(error) });
-    
-        // Ignoring invalid data into Roles table
-        insertDefaultRoles = 'INSERT IGNORE INTO Roles(roleID, rolename) values (2, "guest");';
-        await connection.execute(insertDefaultRoles);
-        logger.info("Roles table created/exists");
-        // .then(logger.info("Role table created/exists")).catch((error) => { logger.error(error) });
-    
-        // Creating the Users table
-        const createTableStatement = `CREATE TABLE IF NOT EXISTS Users(id int AUTO_INCREMENT, username VARCHAR(15), password varchar(128), roleID int, PRIMARY KEY (id), FOREIGN KEY (roleID) REFERENCES Roles(roleID))`;
-        await connection.execute(createTableStatement);
-        logger.info("Users table created/exists");
-        // .then(logger.info("User part table created/exists")).catch((error) => { logger.error(error) });
-
+        await createTables(connection);
         return connection;
     
     } catch (err) {
@@ -76,6 +41,46 @@ async function initializeUserModel(dbname, reset){
         throw new DatabaseConnectionError();
     }
 }
+async function resetTables(connection){
+    resetTable("PartProject");
+    resetTable("UsersProject");
+    resetTable("Project");
+    // Dropping the Users table
+    resetTable("Users");
+    // let dropQuery = "DROP TABLE IF EXISTS Users";
+    // await connection.execute(dropQuery);
+    // logger.info("Users table dropped");
+    // .then(console.log("User table dropped")).catch((error) => { console.error(error) });
+
+    // Dropping the Roles table
+    resetTable("Roles");
+}
+
+async function createTables(connection){
+    const createRoleStatement = `CREATE TABLE IF NOT EXISTS Roles(roleID int, rolename VARCHAR(50), PRIMARY KEY (roleID))`;
+    await connection.execute(createRoleStatement);
+    logger.info("Roles table created/exists");
+    // .then(logger.info("Role table created/exists")).catch((error) => { logger.error(error) });
+
+    // Ignoring invalid data into Roles table
+    let insertDefaultRoles = 'INSERT IGNORE INTO Roles(roleID, rolename) values (1, "admin");';
+    await connection.execute(insertDefaultRoles);
+    logger.info("Roles table created/exists");
+    // .then(logger.info("Role table created/exists")).catch((error) => { logger.error(error) });
+
+    // Ignoring invalid data into Roles table
+    insertDefaultRoles = 'INSERT IGNORE INTO Roles(roleID, rolename) values (2, "guest");';
+    await connection.execute(insertDefaultRoles);
+    logger.info("Roles table created/exists");
+    // .then(logger.info("Role table created/exists")).catch((error) => { logger.error(error) });
+
+    // Creating the Users table
+    let createTableStatement = `CREATE TABLE IF NOT EXISTS Users(id int AUTO_INCREMENT, username VARCHAR(15), password varchar(128), roleID int, PRIMARY KEY (id), FOREIGN KEY (roleID) REFERENCES Roles(roleID))`;
+    await connection.execute(createTableStatement);
+    logger.info("Users table created/exists");
+}
+//#endregion
+
 
 //#endregion
 
@@ -110,7 +115,13 @@ async function getConnection(){
 }
 
 //#endregion
-
+async function getUserByName(username){
+    if (username == undefined || username == null || username.length == 0)
+        return -1;
+    let query = `SELECT id from Users where username = '${username}'`;
+    let result = await connection.query(query);
+    return result[0][0].id;
+}
 /**
  * Adds a user to the database with the given username and password.
  * @param {string} username The username of the user.
@@ -263,5 +274,8 @@ module.exports = {
     addUser,
     showAllUsers,
     validateLogin,
-    getRole
+    getRole,
+    getUserByName,
+    createTables,
+    resetTables
 }

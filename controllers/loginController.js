@@ -8,6 +8,8 @@ const userModel = require('../models/userModel');
 const logger = require('../logger');
 const session = require('../models/sessionModel');
 
+let LOGGED_IN_USER = null;
+
 /**
  * Handles the request for logging in a user and forms the appropriate response.
  * @param {*} request 
@@ -47,6 +49,7 @@ async function loginUser(request, response){
                     loggedInUser: username
                 }
             }
+            LOGGED_IN_USER = username;
             else{
                 pageData = {
                     alertOccurred: true,
@@ -61,7 +64,6 @@ async function loginUser(request, response){
                     loggedInUser: username
                 }
             }
-
 
             logger.info(`LOGGED IN user ${username} -- loginUser`);
             // Render the home page
@@ -254,6 +256,7 @@ router.get('/users/login', showLogin)
 router.post("/users/login", loginUser)
 module.exports = {
     router,
-    routeRoot
+    routeRoot,
+    LOGGED_IN_USER
 }
 
