@@ -123,21 +123,46 @@ async function logoutUser(request, response){
 }
 
 async function showLogin(request, response) {
+    const lang = request.cookies.language;
 
     // Page data 
-    const pageData = {
-        alertOccurred: false,
-        titleName: 'Log In',
-        pathNameForActionForm: 'login',
-        showConfirmPassword: false,
-        oppositeFormAction: 'signup',
-        oppositeFormName: 'Sign up',
-        dontHaveAccountText: "Don't have an account?",
-        display_signup: "block",
-        display_login: "block",
-        logInlogOutText: "Log In",
-        endpointLogInLogOut: "login"
+    let pageData;
+
+    if (!lang || lang === 'en'){
+        pageData = {
+            alertOccurred: false,
+            titleName: 'Log In',
+            pathNameForActionForm: 'login',
+            showConfirmPassword: false,
+            oppositeFormAction: 'signup',
+            oppositeFormName: 'Sign up',
+            dontHaveAccountText: "Don't have an account?",
+            display_signup: "block",
+            display_login: "block",
+            logInlogOutText: "Log In",
+            endpointLogInLogOut: "login",
+            usernameHeader: "Username",
+            passwordHeader: "Password"
+        }
     }
+    else{
+        pageData = {
+            alertOccurred: false,
+            titleName: 'Connexion',
+            pathNameForActionForm: 'login',
+            showConfirmPassword: false,
+            oppositeFormAction: 'signup',
+            oppositeFormName: 'Enregistrer',
+            dontHaveAccountText: "Vous n'avez pas de compte?",
+            display_signup: "block",
+            display_login: "block",
+            logInlogOutText: "Connexion",
+            endpointLogInLogOut: "login",
+            usernameHeader: "Nom D'utilisateur",
+            passwordHeader: "Mot de Passe"
+        }
+    }
+
 
     response.status(201).render('loginsignup.hbs', pageData);
 }
