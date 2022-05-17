@@ -8,6 +8,7 @@ const routeRoot = '/';
 const userModel = require('../models/userModel');
 const projectModel = require('../models/projectModel');
 const logger = require('../logger');
+const {sessions} = require('../models/sessionModel');
 const session = require('../models/sessionModel');
 
 let LOGGED_IN_USER = null;
@@ -54,7 +55,7 @@ async function loginUser(request, response){
                     display_login: "block",
                     logInlogOutText: "Log Out",
                     signUpText: "Sign Up",
-                    endpointLogInLogOut: "login",
+                    endpointLogInLogOut: "logout",
                     loggedInUser: username,
                     Home: "Home",
                     Add: "Add a car part",
@@ -80,7 +81,7 @@ async function loginUser(request, response){
                     display_login: "block",
                     logInlogOutText: "Déconnecter",
                     signUpText: "Enregistrer",
-                    endpointLogInLogOut: "login",
+                    endpointLogInLogOut: "logout",
                     loggedInUser: username,
                     Home: "Retournez",
                 }
@@ -192,21 +193,71 @@ async function loginUser(request, response){
     }
 }
 
-// Deletes the session cookie to logout the user
+/**
+ * Logs out the user & deletes the session cookie.
+ * @param {*} request 
+ * @param {*} response 
+ * @returns 
+ */
 async function logoutUser(request, response){
     const authenticatedSession = authenticateUser(request);
-    if (!authenticatedSession) {
+    const lang = request.cookies.language;
+
+    // Making sure the session is authenticated
+    if (!authenticatedSession || authenticatedSession === null) {
         response.sendStatus(401); // Unauthorized access
         return;
     }
+
     delete session.sessions[authenticatedSession.sessionId]
     console.log("Logged out user " + authenticatedSession.userSession.username);
     
     response.cookie("sessionId", "", { expires: new Date() }); // "erase" cookie by forcing it to expire.
-    response.redirect('/');
 
-    logger.info(`SHOWING LOGIN information (login page) -- showLogin`);
-    response.status(201).render('loginsignup.hbs', pageData);
+    let pageData;
+    let allParts = await carPartModel.findAllCarParts();
+
+    if (!lang || lang === 'en'){
+        pageData = {
+            alertOccurred: true,
+            alertMessage: `${authenticatedSession.userSession.username} has successfully logged out!`,
+            alertLevel: 'success',
+            alertLevelText: 'Success',
+            alertHref: 'check-circle-fill',
+            display_signup: "none",
+            display_login: "block",
+            logInlogOutText: "Log In",
+            signUpText: "Sign Up",
+            endpointLogInLogOut: "login",
+            Home: "Home",
+            Add: "Add a car part",
+            Show: "Find a Car Part",
+            List: "Show all Car Parts",
+            Edit: "Update a Car Part",
+            Delete: "Delete a Car Part",
+            showList: true,
+            Current: "English",
+            part: allParts,
+        }
+    }
+    else{
+        pageData = {
+            alertOccurred: true,
+            alertMessage: `${authenticatedSession.userSession.username} s'est connecté avec succès!`,
+            alertLevel: 'success',
+            alertLevelText: 'Success',
+            alertHref: 'check-circle-fill',
+            display_signup: "none",
+            display_login: "block",
+            logInlogOutText: "Déconnecter",
+            signUpText: "Enregistrer",
+            endpointLogInLogOut: "login",
+            Home: "Retournez",
+        }
+    }
+    
+    logger.info(`LOGGING OUT user ${authenticatedSession.userSession.username} -- showLogout`);
+    response.status(201).render('home.hbs', pageData);
 }
 
 async function showLogin(request, response) {
@@ -264,27 +315,35 @@ function authenticateUser(request) {
     if (!request.cookies) {
         return null;
     }
+
     // We can obtain the session token from the requests cookies, which come with every request
-    const sessionId = request.cookies['sessionId']
+    const sessionId = request.cookies['sessionId'];
     if (!sessionId) {
         // If the cookie is not set, return null
         return null;
     }
+
     // We then get the session of the user from our session map
-    userSession = session.sessions[sessionId]
+    let userSession = sessions[sessionId];
+
+    // If no user session is defined
     if (!userSession) {
         return null;
-    } // If the session has expired, delete the session from our map and return null
+    } 
+    
+    // If the session has expired, delete the session from our map and return null
     if (userSession.isExpired()) {
         delete session.sessions[sessionId];
         return null;
     }
+
     return { sessionId, userSession }; // Successfully validated.
 }
 
 
-router.get('/users/login', showLogin)
-router.post("/users/login", loginUser)
+router.get('/users/login', showLogin);
+router.get('/users/logout', logoutUser);
+router.post("/users/login", loginUser);
 
 
 module.exports = {

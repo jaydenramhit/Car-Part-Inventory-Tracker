@@ -60,10 +60,8 @@ function sendHome(request, response) {
         }
     }
 
-
     logger.info(`RENDERING home page -- sendHome`);
     response.status(200).render('home.hbs', pageData);
-
 }
 
 /**

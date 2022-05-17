@@ -50,6 +50,7 @@ const { LOGGED_IN_USER } = require('./loginController');
             projects: projs,
             clickedNewProject: false,
             Home: "Home",
+            loggedInUser: LOGGED_IN_USER
         }
     
         logger.info(`CREATED PROJECT (Name: ${name}, Description: ${description} -- loginUser`);
@@ -65,7 +66,8 @@ const { LOGGED_IN_USER } = require('./loginController');
             titleName: 'Create a Project',
             pathNameForActionForm: 'projects',
             projects: await projectModel.getAllProjects(),
-            clickedNewProject: false
+            clickedNewProject: false,
+            loggedInUser: LOGGED_IN_USER
         }
         
         // If the error is an instance of the DatabaseConnectionError error
@@ -95,6 +97,8 @@ const { LOGGED_IN_USER } = require('./loginController');
  * @param {*} response 
  */
  async function showProjects(request, response){
+
+    let cookie = request.cookies;
 
     // Page data 
     const pageData = {
