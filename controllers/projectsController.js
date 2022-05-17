@@ -32,7 +32,7 @@ const { LOGGED_IN_USER } = require('./loginController');
         // Add project
         let projectId = await projectModel.addProject(name, description)
         await projectModel.addUserToProject(projectId, userId);
-        let projs = await projectModel.getAllProjects();
+        let projs = await projectModel.getAllProjects(request.cookies.username);
 
         const pageData = {
             alertOccurred: true,
@@ -42,8 +42,14 @@ const { LOGGED_IN_USER } = require('./loginController');
             alertHref: 'exclamation-triangle-fill',
             titleName: 'Create a Project',
             pathNameForActionForm: 'projects',
-            projects: await projectModel.getAllProjects(),
-            clickedNewProject: false
+            display_signup: "none",
+            display_login: "block",
+            logInlogOutText: "Log Out",
+            signUpText: "Sign Up",
+            endpointLogInLogOut: "login",
+            projects: projs,
+            clickedNewProject: false,
+            Home: "Home",
         }
     
         logger.info(`CREATED PROJECT (Name: ${name}, Description: ${description} -- loginUser`);

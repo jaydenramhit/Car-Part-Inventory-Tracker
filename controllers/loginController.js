@@ -6,6 +6,7 @@ const carPartModel = require('../models/carPartModelMysql');
 const router = express.Router();
 const routeRoot = '/';
 const userModel = require('../models/userModel');
+const projectModel = require('../models/projectModel');
 const logger = require('../logger');
 const session = require('../models/sessionModel');
 
@@ -39,6 +40,8 @@ async function loginUser(request, response){
             LOGGED_IN_USER = username;
             const lang = request.cookies.language;
             let allParts = await carPartModel.findAllCarParts();
+            let allProjects = await projectModel.getAllProjects(username);
+            // $('.modal').modal('handleUpdate');
 
             if (!lang || lang === 'en'){
                 pageData = {
@@ -62,7 +65,8 @@ async function loginUser(request, response){
                     showList: true,
                     Current: "English",
                     part: allParts,
-                    isUserLoggedIn: true
+                    isUserLoggedIn: true,
+                    project: allProjects
                 }
             }
             else{
