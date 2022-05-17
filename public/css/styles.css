@@ -65,6 +65,7 @@ footer {
    align-items: center;
    flex-direction: column;
    width: 100%;
+   margin-left: -50px;
 }
 
 
@@ -120,13 +121,15 @@ table {
 }
 
 #add-project-btn{
-    border: 1px solid #0D6EFD;
+    /* border: 1px solid #0D6EFD; */
     border-radius: 0.85rem;
-    background: none;
-    padding: 5px 10px;
+    /* color: black; */
+    /* background: none; */
+    padding: 3px 5px;
+    margin: 0 auto;
 }
 
-#grid-container-projects{
+.grid-container-projects{
     display: grid;
     grid-template-columns: 1.5fr 10fr;
 }
@@ -134,7 +137,7 @@ table {
 .grid-item-1{
     z-index: 999;
     max-width: 300px;
-    padding: 3rem 0 0 2rem;
+    padding: 8.5rem 0 0 2rem;
 }
 
 /* .grid-item-2{

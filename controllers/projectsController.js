@@ -53,7 +53,7 @@ const { LOGGED_IN_USER } = require('./loginController');
         }
     
         logger.info(`CREATED PROJECT (Name: ${name}, Description: ${description} -- loginUser`);
-        response.status(201).render('projects.hbs', pageData);
+        response.status(201).render('allProjects.hbs', pageData);
 
     } catch(error) {
         const pageData = {
@@ -72,19 +72,19 @@ const { LOGGED_IN_USER } = require('./loginController');
         if (error instanceof sqlModel.DatabaseConnectionError){
             pageData.alertMessage = "Error connecting to database.";
             logger.error(`DatabaseConnectionError when CREATING PROJECT ${name} -- createProject`);
-            response.status(500).render('projects.hbs', pageData);
+            response.status(500).render('allProjects.hbs', pageData);
         }
         // If the error is an instance of the InvalidInputError error
         else if (error instanceof sqlModel.InvalidInputError){
             pageData.alertMessage = "Invalid input, check that all fields are alpha numeric where applicable.";
             logger.error(`UserLoginError when CREATING PROJECT ${name} -- createProject`);
-            response.status(404).render('projects.hbs', pageData);
+            response.status(404).render('allProjects.hbs', pageData);
         }
         // If any other error occurs
         else {
             pageData.alertMessage = `Unexpected error while trying to create project: ${error.message}`;
             logger.error(`OTHER error when CREATING PROJECT ${name} -- createProject`);
-            response.status(500).render('projects.hbs', pageData);
+            response.status(500).render('allProjects.hbs', pageData);
         }
     }
 }
@@ -116,7 +116,7 @@ const { LOGGED_IN_USER } = require('./loginController');
     }
 
     logger.info(`SHOWING ALL PROJECTS  -- showProjects`);
-    response.status(201).render('projects.hbs', pageData);
+    response.status(201).render('allProjects.hbs', pageData);
 }
 
 /**
@@ -139,7 +139,7 @@ async function showCreateForm(request, response){
     }
 
     // logger.info(`SHOWING ALL PROJECTS  -- showProjects`);
-    response.status(201).render('projects.hbs', pageData);
+    response.status(201).render('allProjects.hbs', pageData);
 }
 
 router.post("/projects", createProject);
