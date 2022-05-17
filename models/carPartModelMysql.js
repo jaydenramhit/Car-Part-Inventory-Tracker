@@ -3,6 +3,7 @@
 const mysql = require('mysql2/promise');
 const validUtils = require('../validateUtils.js');
 const logger = require('../logger');
+const userModel = require('../models/userModel');
 var connection;
 
 // docker run -p 10000:3306 --name carPartSqlDb -e MYSQL_ROOT_PASSWORD=pass -e MYSQL_DATABASE=carPart_db -d mysql:5.7
@@ -28,11 +29,14 @@ async function initialize(dbname, reset){
     
         // Dropping the tables if resetting them
         if (reset){
-            resetTable();
+            resetTable("PartProject");
+            resetTable("UsersProject");
+            resetTable("Project");
+            resetTable("carPart");
         }
 
         // Creating the carPart table
-        const createTableStatement = 'CREATE TABLE IF NOT EXISTS carPart(partNumber int, name VARCHAR(100), `condition` VARCHAR(50), image VARCHAR(2000), PRIMARY KEY (partNumber))';
+        let createTableStatement = 'CREATE TABLE IF NOT EXISTS carPart(partNumber int, name VARCHAR(100), `condition` VARCHAR(50), image VARCHAR(2000), PRIMARY KEY (partNumber))';
         await connection.execute(createTableStatement);
         logger.info("Car part table created/exists");
 
@@ -63,9 +67,9 @@ async function getConnection(){
 /**
  * Drops the carPart table from the database.
  */
-async function resetTable(){
+async function resetTable(table){
     try {
-        const dropQuery = "DROP TABLE IF EXISTS carPart";
+        const dropQuery = `DROP TABLE IF EXISTS ${table}`;
         await connection.execute(dropQuery);
         logger.info("Car part table dropped");
         // .then(logger.info("Car part table dropped")).catch((error) => { logger.error(error) });
@@ -75,6 +79,11 @@ async function resetTable(){
         throw new DatabaseConnectionError();
     }
 }
+
+//#endregion
+
+//#region Project operations
+
 
 //#endregion
 
@@ -98,7 +107,7 @@ async function addCarPart(partNumber, name, condition, image){
     try {
         const addStatement = 'INSERT INTO carPart(partNumber, name, `condition`' + `, image) values ('${partNumber}', '${name}', '${condition}', '${image}');`;
         await connection.execute(addStatement);
-        logger.info("Successful added car part to the database.");
+        logger.info(`ADDED car part (${partNumber}) to the database.`);
 
         return { "partNumber": partNumber, "name": name, "condition": condition, "image": image };           
     }
@@ -123,7 +132,7 @@ async function findCarPartByNumber(partNumber){
     try {
         const queryStatement = `SELECT * FROM carPart WHERE partNumber= '${partNumber}';`;
         let carPartArray = await connection.query(queryStatement);
-        logger.info("Successful found the car part in the database.");
+        logger.info(`FOUND the car part (${partNumber}) in the database.`);
 
         return carPartArray[0];
     }
@@ -141,7 +150,7 @@ async function findAllCarParts(){
     try {
         const queryStatement = "SELECT partNumber, name, `condition`, image FROM carPart;";
         let carPartArray = await connection.query(queryStatement);
-        logger.info("Successful found ALL the car parts in the database.");
+        logger.info("FOUND ALL the car parts in the database.");
 
         return carPartArray[0];
     }
@@ -167,7 +176,7 @@ async function updateCarPartName(partNumber, name){
     try {
         const addStatement = `UPDATE carPart SET name = '${name}' WHERE partNumber = ${partNumber};`;
         await connection.query(addStatement);
-        logger.info("Successful updated the car part in the database.");
+        logger.info(`UPDATED the car part (${partNumber}) in the database.`);
 
         return { "partNumber": partNumber, "name": name };
     }
@@ -192,7 +201,7 @@ async function updateCarPartName(partNumber, name){
     try {
         const addStatement = `DELETE FROM carPart where partNumber = ${partNumber};`;
         await connection.execute(addStatement);
-        logger.info("Successful deleted the car part from the database.");
+        logger.info(`DELETED the car part (${partNumber}) from the database.`);
 
         return {"partNumber": partNumber }
     }

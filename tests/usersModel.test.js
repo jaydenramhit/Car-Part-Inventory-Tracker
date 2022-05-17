@@ -114,3 +114,31 @@ test("Role Table has default roles", async () => {
     expect(result[0][0].rolename).toContain("admin")
     expect(result[0][1].rolename).toContain("guest")
 })
+
+test("Successful login using valid credentials", async () => {
+    let user1 = userData.at(0);
+    await model.addUser(user1.username, user1.password);
+
+    let result = await model.validateLogin(user1.username, user1.password)
+
+    expect(result).toBe(true);
+})
+
+test("Unsuccessful login using invalid password", async () => {
+    let user1 = userData.at(0);
+    await model.addUser(user1.username, user1.password);
+
+    let result = await model.validateLogin(user1.username, user1.password+"1")
+
+    expect(result).toBe(false);
+})
+
+test("Unsuccessful login using invalid username", async () => {
+    let user1 = userData.at(0);
+    await model.addUser(user1.username, user1.password);
+
+    let result = await model.validateLogin(user1.username+"1", user1.password)
+
+    expect(result).toBe(false);
+})
+
