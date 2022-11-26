@@ -1,6 +1,10 @@
 # Car Part Inventory Tracker
+
+Created as part of a web programming course.
+
+Collaborated with Joseph Ambayec and Braeden Giasson to create a CRUD web application for managing an inventory of car parts.
  
-##Do the following to run the website:
+## Do the following to run the website:
 - npm install
 - docker run -p 10000:3306 --name carPartSqlDb -e MYSQL_ROOT_PASSWORD=pass -e MYSQL_DATABASE=carPart_db -d mysql:5.7
 - also create a database called car_testDb
