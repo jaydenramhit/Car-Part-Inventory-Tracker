@@ -11,6 +11,6 @@ Collaborated with [Joseph Ambayec](https://github.com/JosephAmbayec) and [Braede
 
 home url: http://localhost:1339/
 
-##To use the website, simply click the buttons on the side to perform the desired actions.
+## To use the website, simply click the buttons on the side to perform the desired actions.
 
 Check the documentation in documentation/index.html for more information.
