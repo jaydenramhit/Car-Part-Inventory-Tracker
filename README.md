@@ -2,7 +2,7 @@
 
 Created as part of a web programming course.
 
-Collaborated with Joseph Ambayec and Braeden Giasson to create a CRUD web application for managing an inventory of car parts.
+Collaborated with [Joseph Ambayec](https://github.com/JosephAmbayec) and [Braeden Giasson](https://github.com/BraedenGiasson) to create a CRUD web application for managing an inventory of car parts.
  
 ## Do the following to run the website:
 - npm install
